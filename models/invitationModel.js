@@ -8,6 +8,11 @@ Invitation.init(
     guestEmail: {
       type: S.STRING,
       allowNull: false,
+      validate: {
+        isEmail: {
+          msg: 'Please enter a valid email address',
+        },
+      },
     },
     accessCode: {
       type: S.STRING,

@@ -1,3 +1,4 @@
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv').config();
 const express = require('express');
 const db = require('./db');
@@ -10,9 +11,11 @@ const models = require('./models');
 
 // middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(morgan('tiny'));
-//app.use('/api', routes);
+
+app.use('/api', routes);
 
 (async () => {
   try {
