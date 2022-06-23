@@ -10,7 +10,7 @@ Event.init(
       allowNull: false,
     },
     description: {
-      type: S.STRING,
+      type: S.TEXT,
       allowNull: false,
     },
     assistantsCount: {

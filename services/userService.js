@@ -1,0 +1,64 @@
+const User = require('../models/userModel');
+const bcrypt = require('bcryptjs');
+
+class UserService {
+  static async registerUser(body) {
+    try {
+      const { firstName, lastName, email, password } = body;
+      if (!firstName || !lastName || !email || !password) {
+        return { error: true, data: 'Please enter all fields' };
+      }
+
+      // Check if user already exists
+      const user = await User.findOne({ where: { email } });
+      if (user) return { error: true, data: 'User already exists' };
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      // Create user
+      const newUser = await User.create({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      });
+
+      if (newUser) return { error: false, data: newUser };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async loginUser(body) {
+    const { email, password } = body;
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (user && (await bcrypt.compare(password, user.password))) {
+        return {
+          error: false,
+          data: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            isAdmin: user.isAdmin,
+          },
+        };
+      }
+    } catch (error) {
+      return { error: true, data: 'Invalid credentials' };
+    }
+  }
+
+  static async getMe(user) {
+    const { firstName, lastName, email, isAdmin } = user;
+    try {
+      return { error: false, data: { firstName, lastName, email, isAdmin } };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+}
+
+module.exports = UserService;
