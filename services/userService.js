@@ -24,7 +24,7 @@ class UserService {
         password: hashedPassword,
       });
 
-      if (newUser) return { error: false, data: newUser };
+      if (newUser) return { error: false, data: 'Register successfully' };
     } catch (error) {
       return { error: true, data: error.message };
     }
@@ -52,9 +52,12 @@ class UserService {
   }
 
   static async getMe(user) {
-    const { firstName, lastName, email, isAdmin } = user;
+    const { id, firstName, lastName, email, isAdmin } = user;
     try {
-      return { error: false, data: { firstName, lastName, email, isAdmin } };
+      return {
+        error: false,
+        data: { id, firstName, lastName, email, isAdmin },
+      };
     } catch (error) {
       return { error: true, data: error };
     }

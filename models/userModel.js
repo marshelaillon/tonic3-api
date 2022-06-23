@@ -8,22 +8,10 @@ User.init(
     firstName: {
       type: S.STRING,
       allowNull: false,
-      validate: {
-        len: {
-          args: [6, 16],
-          msg: 'First name must be between 6 and 16 characters',
-        },
-      },
     },
     lastName: {
       type: S.STRING,
       allowNull: false,
-      validate: {
-        len: {
-          args: [6, 16],
-          msg: 'Last name must be between 6 and 16 characters',
-        },
-      },
     },
     email: {
       type: S.STRING,

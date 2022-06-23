@@ -9,6 +9,10 @@ Event.init(
       type: S.STRING,
       allowNull: false,
     },
+    url: {
+      type: S.TEXT,
+      allowNull: false,
+    },
     description: {
       type: S.TEXT,
       allowNull: false,
