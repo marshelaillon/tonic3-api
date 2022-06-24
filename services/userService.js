@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 class UserService {
   static async registerUser(body) {
     try {
-      const { firstName, lastName, email, password } = body;
+      const { isAdmin, firstName, lastName, email, password } = body;
       if (!firstName || !lastName || !email || !password) {
         return { error: true, data: 'Please enter all fields' };
       }
@@ -22,6 +22,7 @@ class UserService {
         lastName,
         email,
         password: hashedPassword,
+        isAdmin,
       });
 
       if (newUser) return { error: false, data: 'Register successfully' };
@@ -45,9 +46,11 @@ class UserService {
             isAdmin: user.isAdmin,
           },
         };
+      } else {
+        return { error: true, data: 'Invalid credentials' };
       }
     } catch (error) {
-      return { error: true, data: 'Invalid credentials' };
+      return { error: true, data: error };
     }
   }
 

@@ -32,7 +32,7 @@ class UserController {
   // @access  Private
   static async logoutUser(req, res) {
     res.cookie('token', '', { maxAge: 1 });
-    res.sendStatus(201);
+    res.status(201).send({});
   }
 
   // @desc    Persist user session
