@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const { invitationModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
@@ -36,6 +37,17 @@ class UserService {
         profilePicture,
         genre,
       });
+
+
+      if (newUser) {
+        // RECIEN AGREGADO Alan.-
+        // const updatedGues = await invitationModel.update(
+        //   { checked: true },
+        //   { where: email }
+        // );
+
+        return { error: false, data: 'Register successfully' };
+      }
 
       await transporter.sendMail(
         {

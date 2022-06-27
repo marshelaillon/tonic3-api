@@ -5,18 +5,30 @@ class Invitation extends S.Model {}
 
 Invitation.init(
   {
-    guestEmail: {
+    email: {
       type: S.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         isEmail: {
           msg: 'Please enter a valid email address',
         },
       },
     },
+    uuid: {
+      type: S.UUID,
+      defaultValue: S.UUIDV4,
+    },
     accessCode: {
       type: S.STRING,
-      allowNull: false,
+    },
+    send: {
+      type: S.BOOLEAN,
+      defaultValue: false,
+    },
+    checked: {
+      type: S.BOOLEAN,
+      defaultValue: false,
     },
   },
   { sequelize: db, modelName: 'invitations' }
