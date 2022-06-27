@@ -22,6 +22,7 @@
     "morgan": "^1.10.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.21.0"
+    "sequelize": "^6.21.0",
+    "sweetalert2-react": "^0.8.3"
   }
 }

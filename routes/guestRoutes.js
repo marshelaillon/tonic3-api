@@ -3,6 +3,7 @@ const guestController = require('../controllers/guestController');
 
 // rutas para el admin.
 router.get('/get-list', guestController.getList);
+router.post('/verify-token', guestController.verifyToken);
 router.post('/add-guest', guestController.addGuest);
 
 module.exports = router;

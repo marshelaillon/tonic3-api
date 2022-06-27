@@ -1,4 +1,5 @@
 const { invitationModel } = require('../models');
+const router = require('../routes/guestRoutes');
 
 class guestService {
   static async addGuest(body) {
@@ -27,6 +28,25 @@ class guestService {
         return { error: true, data: "Guest's list is empty" };
 
       return { error: false, data: guestEmailList };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async verifyToken(body) {
+    const { email, token } = body;
+    console.log('email', email, 'token', token);
+    try {
+      const verifiedGuest = await invitationModel.findOne({
+        where: { email: email },
+      });
+      if (!verifiedGuest) {
+        return { error: true, data: 'No se encontro el invitado' };
+      }
+      if (token !== verifiedGuest.accessCode)
+        return { error: false, data: false };
+
+      return { error: false, data: true };
     } catch (error) {
       return { error: true, data: error.message };
     }
