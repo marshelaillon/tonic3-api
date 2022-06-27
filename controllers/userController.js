@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const UserService = require('../services/userService');
-const generateToken = require('../utils/utils');
+const generateToken = require('../utils/generateToken');
 
 class UserController {
   // @desc    Register a new user
@@ -42,6 +42,59 @@ class UserController {
     const { error, data } = await UserService.getMe(req.user);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
+  }
+
+  // @desc    Generate a link to change the password
+  // @route   POST /api/users/forgot-password
+  // @access  Public
+  static async forgotPassword(req, res) {
+    const { email } = req.body;
+    const { error, data } = await UserService.forgotPassword(email);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
+
+  // @desc    Create a new password
+  // @route   POST /api/users/:id/new-password
+  // @access  Public/Private
+  static async createNewPassword(req, res) {
+    const { newPassword } = req.body;
+    const { id } = req.params;
+    const { error, data } = await UserService.createNewPassword(
+      newPassword,
+      id
+    );
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+
+  // @desc    Register a new user
+  // @route   POST /api/users/register
+  // @access  Public
+  static async userUpdate(req, res) {
+    const { error, data } = await UserService.userUpdate(
+      req.body,
+      req.params.id
+    );
+    if (error) return res.status(400).json(data);
+    res.status(200).json(data);
+  }
+
+  // @desc    Remove a new user
+  // @route   POST /api/users/register
+  // @access  Public & (private¿?)
+  static async removeUser(req, res) {
+    const { error, data } = await UserService.removeUser(req.params.id);
+    if (error) return res.status(400).json(data);
+    res.status(200).json(data);
+  }
+
+  // @desc    Get all users
+  // @route   POST /api/users/register
+  // @access  private
+  static async getUsers(req, res) {
+    const { error, data } = await UserService.getUsers(req.user);
+    if (error) return res.status(401).json(data);
+    res.status(200).json(data);
   }
 }
 
