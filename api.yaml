@@ -1,0 +1,74 @@
+openapi: 3.0.1
+info:
+  title: Virtual Events App Documentation
+  version: 1.0.0
+  description: API for the application
+  termsOfService: https://example.com/terms/
+  contact:
+    name: P5 Devs
+    url: https://example.com/contact/
+    email: virutaleventsteam@gmail.com
+servers:
+  - url: http://localhost:3001/api
+paths:
+  /users/register:
+    post:
+      tags:
+        - user
+      summary: Creates a new user
+      requestBody:
+        description: Created user object
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: Register successfully
+          content: {}
+  /users/login:
+    post:
+      tags:
+        - user
+      summary: Logs user into the system
+      requestBody:
+        description: Object with user email and password
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      responses:
+        200:
+          description: Login successfully
+          content: {}
+        400:
+          description: Bad request
+          content: {}
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          unique: true
+        password:
+          type: string
+          len: [8, 64]
+        isAdmin:
+          type: boolean
+          default: false
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+          len: [8, 16]

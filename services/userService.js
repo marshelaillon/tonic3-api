@@ -1,5 +1,7 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const transporter = require('../utils/nodemailConfig');
 
 class UserService {
   static async registerUser(body) {
@@ -35,6 +37,26 @@ class UserService {
         genre,
       });
 
+      await transporter.sendMail(
+        {
+          from: 'virtualevents@gmail.ar',
+          to: email,
+          subject: 'Register',
+          html: `<div>
+          <h2>REGISTER SUCCESSFULLY!</h2>
+        </div>`,
+        },
+        (error, info) => {
+          if (error) {
+            return { error: true, data: 'Something went wrong!' };
+          } else {
+            return {
+              error: false,
+              data: 'Email sent successfully!',
+            };
+          }
+        }
+      );
       if (newUser) return { error: false, data: 'Register successfully' };
     } catch (error) {
       return { error: true, data: error.message };
@@ -87,6 +109,52 @@ class UserService {
     }
   }
 
+  static async forgotPassword(email) {
+    const user = await User.findOne({ where: { email } });
+    let message = 'Check your email for a link to reset your password!';
+
+    if (!user)
+      return {
+        error: true,
+        data: message,
+      };
+
+    try {
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+        expiresIn: '10m',
+      });
+      const verificationLink = `http://localhost:3000/new-password/${user.id}/${token}`;
+      await transporter.sendMail({
+        from: 'virtualevents@gmail.ar',
+        // ? DESCOMENTAR LUEGO: to: user.email,
+        to: `marshel.aillon@gmail.com, maxirecibos182@gmail.com, benitez.alanez@gmail.com`,
+        subject: 'NEW PASSWORD!',
+        html: `<div>
+              <h2>Click on the following link to reset your password: </h2>
+              <h2><a href=${verificationLink}>Go to verification link!</a></h2>
+            </div>`,
+      });
+      return {
+        error: false,
+        data: 'Email sent successfully!',
+      };
+    } catch (error) {
+      return {
+        error: true,
+        data: message,
+      };
+    }
+  }
+
+  static async createNewPassword(newPassword, id) {
+    try {
+      const user = await User.findByPk(id);
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+      await user.update({ password: hashedPassword });
+      return { error: false, data: 'Password changed successfully!' };
+    } catch (error) {
+      return { error: true, data: error };
+      
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
     const { isAdmin, firstName, lastName, password, profilePicture, genre } = body;
