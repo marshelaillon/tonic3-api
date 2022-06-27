@@ -8,5 +8,8 @@ router.get('/logout', userController.logoutUser);
 router.get('/getMe', requireAuth, userController.getMe);
 router.post('/forgot-password', userController.forgotPassword);
 router.post('/:id/new-password', userController.createNewPassword);
+router.get('/admin/user', requireAuth, userController.getUsers);
+router.put('/update/:id', userController.userUpdate);
+router.delete('/remove/:id', userController.removeUser);
 
 module.exports = router;
