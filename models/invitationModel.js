@@ -15,10 +15,6 @@ Invitation.init(
         },
       },
     },
-    uuid: {
-      type: S.UUID,
-      defaultValue: S.UUIDV4,
-    },
     accessCode: {
       type: S.STRING,
     },

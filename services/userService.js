@@ -19,7 +19,7 @@ class UserService {
       if (!firstName || !lastName || !email || !password || !genre) {
         return { error: true, data: 'Please enter all fields' };
       }
-
+      // const guestsMails = await invitationModel.findAll({ attributes: email });
       // Check if user already exists
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
@@ -38,38 +38,34 @@ class UserService {
         genre,
       });
 
-
       if (newUser) {
         // RECIEN AGREGADO Alan.-
         // const updatedGues = await invitationModel.update(
         //   { checked: true },
         //   { where: email }
         // );
-
+        await transporter.sendMail(
+          {
+            from: 'virtualeventst3@gmail.ar',
+            to: email,
+            subject: 'Register',
+            html: `<div>
+            <h2>REGISTER SUCCESSFULLY!</h2>
+          </div>`,
+          },
+          (error, info) => {
+            if (error) {
+              return { error: true, data: 'Something went wrong!' };
+            } else {
+              return {
+                error: false,
+                data: 'Email sent successfully!',
+              };
+            }
+          }
+        );
         return { error: false, data: 'Register successfully' };
       }
-
-      await transporter.sendMail(
-        {
-          from: 'virtualevents@gmail.ar',
-          to: email,
-          subject: 'Register',
-          html: `<div>
-          <h2>REGISTER SUCCESSFULLY!</h2>
-        </div>`,
-        },
-        (error, info) => {
-          if (error) {
-            return { error: true, data: 'Something went wrong!' };
-          } else {
-            return {
-              error: false,
-              data: 'Email sent successfully!',
-            };
-          }
-        }
-      );
-      if (newUser) return { error: false, data: 'Register successfully' };
     } catch (error) {
       return { error: true, data: error.message };
     }
@@ -166,10 +162,12 @@ class UserService {
       return { error: false, data: 'Password changed successfully!' };
     } catch (error) {
       return { error: true, data: error };
-      
+    }
+  }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
-    const { isAdmin, firstName, lastName, password, profilePicture, genre } = body;
+    const { isAdmin, firstName, lastName, password, profilePicture, genre } =
+      body;
     try {
       // verifico si el usuario existe
       const user = await User.findByPk(params);
