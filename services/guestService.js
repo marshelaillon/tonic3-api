@@ -42,7 +42,7 @@ class guestService {
       });
       if (!verifiedGuest) {
         return { error: true, data: 'No se encontro el invitado' };
-      }
+      } // 1234 1234
       if (token !== verifiedGuest.accessCode)
         return { error: false, data: false };
 
