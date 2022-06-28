@@ -66,7 +66,7 @@ class UserController {
     );
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
-
+  }
   // @desc    Register a new user
   // @route   POST /api/users/register
   // @access  Public
