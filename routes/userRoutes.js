@@ -11,5 +11,8 @@ router.post('/:id/new-password', userController.createNewPassword);
 router.get('/admin/user', requireAuth, userController.getUsers);
 router.put('/update/:id', userController.userUpdate);
 router.delete('/remove/:id', userController.removeUser);
+//router.post("/register-with-recaptcha",userController.recaptcha)
+
+
 
 module.exports = router;

@@ -8,6 +8,7 @@ class UserController {
   // @access  Public
   static async registerUser(req, res) {
     const { error, data } = await UserService.registerUser(req.body);
+    console.log(data);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
   }
@@ -79,7 +80,13 @@ class UserController {
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
-
+  
+ /*  static async recaptcha (req, res) {
+    const { error, data } = await UserService.recaptcha(req.body)
+    if (error) return res.status(400).json(data);
+    res.status(200).json(data);
+  }
+   */
   // @desc    Remove a new user
   // @route   POST /api/users/register
   // @access  Public & (private¿?)
@@ -98,5 +105,7 @@ class UserController {
     res.status(200).json(data);
   }
 }
+
+
 
 module.exports = UserController;
