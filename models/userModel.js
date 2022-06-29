@@ -1,7 +1,7 @@
 const S = require('sequelize');
 const db = require('../db');
 
-class User extends S.Model { }
+class User extends S.Model {}
 
 User.init(
   {
@@ -44,7 +44,7 @@ User.init(
     },
     genre: {
       type: S.STRING,
-      require: true,
+      // require: true,
     },
   },
   { sequelize: db, modelName: 'users' }

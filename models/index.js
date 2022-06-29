@@ -17,6 +17,7 @@ eventModel.hasMany(categoryModel, { as: 'category' });
 
 // A user has many invitations
 userModel.belongsTo(invitationModel, { as: 'invitation' });
+// invitationModel.belongsTo(userModel, { as: 'registeredUser' });
 
 module.exports = {
   categoryModel,

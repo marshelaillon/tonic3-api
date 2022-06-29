@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const userRoutes = require('./userRoutes');
-const guestRoutes = require('./guestRoutes');
+const adminRoutes = require('./adminRoutes');
+const requireAuth = require('../middlewares/requireAuth');
 
 router.use('/users', userRoutes);
-router.use('/guests', guestRoutes);
+router.use('/admin', adminRoutes);
 
 module.exports = router;
