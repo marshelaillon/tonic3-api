@@ -98,6 +98,18 @@ class UserController {
     if (error) return res.status(401).json(data);
     res.status(200).json(data);
   }
+
+  static async verifyEmail(req, res) {
+    const { error, data } = await UserService.verifyEmail(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
+
+  static async verifyToken(req, res) {
+    const { error, data } = await UserService.verifyToken(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
 }
 
 module.exports = UserController;

@@ -11,5 +11,7 @@ router.post('/forgot-password', userController.forgotPassword);
 router.post('/:id/new-password', userController.createNewPassword);
 router.put('/update/:id', userController.userUpdate);
 router.delete('/remove/:id', userController.removeUser);
+router.post('/verify-email', userController.verifyEmail);
+router.post('/verify-guest-token', userController.verifyToken);
 
 module.exports = router;
