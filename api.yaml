@@ -46,6 +46,20 @@ paths:
         400:
           description: Bad request
           content: {}
+  /guests/add-guest:
+    post:
+      tags:
+        - guest
+      summary: add new guest on Invitations table
+      requestBody: strings's array whit guest's email.
+        description: The route check if email is on db, else added it
+        required: true
+      responses: 
+        200:
+          description: the guests was created successfully
+          content: {}
+        400: 
+          description: Bad request
 components:
   schemas:
     User:

@@ -11,6 +11,10 @@ eventModel.belongsToMany(userModel, { through: 'user_event' });
 // An event has many categories
 eventModel.hasMany(categoryModel, { as: 'category' });
 
+// A invitation belongs to an Event.
+// invitationModel.belongsTo(eventModel, { as: 'event' });
+// eventModel.hasMany(invitationModel, { as: 'guests' });
+
 // A user has many invitations
 userModel.belongsTo(invitationModel, { as: 'invitation' });
 
