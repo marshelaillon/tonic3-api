@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const S = require('sequelize');
 const db = require('../db');
 
@@ -29,5 +31,14 @@ Invitation.init(
   },
   { sequelize: db, modelName: 'invitations' }
 );
-
+// DATO:
+// CUANDO SE GENERA SE SOLICITA DESDE EL FRONT UN NUEVO TOKEN (ACCESSCODE)
+// DEBEMOS HACER LO MISMO, PROBABLEMENTE CON UN BEFOREUPDATE.
+Invitation.beforeCreate(invitations => {
+  return new Promise(async resolved => {
+    const randomString = Math.random().toString(36);
+    const accessCode = await bcrypt.hash(randomString, 2);
+    resolved((invitations.accessCode = accessCode));
+  });
+});
 module.exports = Invitation;

@@ -7,9 +7,9 @@ class guestController {
     res.status(200).json({ data });
   }
 
-  static async getList(req, res) {
-    const { error, data } = await guestService.getList();
-    console.log('error', error, 'data', data);
+  // cambiar nombre al metodo y hacer que devuelva algo tipo {verified:true/false, checked: true/false};
+  static async verifyGuest(req, res) {
+    const { error, data } = await guestService.verifyGuest(req.body);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
   }

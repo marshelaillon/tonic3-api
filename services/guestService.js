@@ -1,33 +1,36 @@
-const { invitationModel } = require('../models');
+const { invitationModel, eventModel } = require('../models');
 const router = require('../routes/guestRoutes');
+const jwt = require('jsonwebtoken');
 
 class guestService {
   static async addGuest(body) {
     try {
-      const { email, accessCode } = body;
-      if (!email) return { error: true, data: 'Please enter all fields' };
+      const { emails } = body;
+      if (!emails) return { error: true, data: 'Please enter all fields' };
 
-      const guest = await invitationModel.findOne({ where: { email } });
-      if (guest) return { error: true, data: 'guest already exists' };
+      emails.forEach(async email => {
+        if (!(await invitationModel.findOne({ where: { email: email } }))) {
+          const guest = await invitationModel.create({ email });
+          // const event = await eventModel.findByPk(body.eventId);
+          // guest.setEvent(event)
+        }
+      });
 
-      const addedGuest = invitationModel.create(body);
-      if (addedGuest)
-        return { error: false, data: 'the guest was created successfully' };
+      return { error: false, data: 'the guests was created successfully' };
     } catch (error) {
       return { error: true, data: error.message };
     }
   }
 
-  static async getList() {
+  static async verifyGuest(body) {
     try {
-      const guestEmailList = await invitationModel.findAll({
-        attributes: ['email'],
+      const { email } = body;
+      const guest = await invitationModel.findOne({
+        where: { email: email },
       });
 
-      if (!guestEmailList)
-        return { error: true, data: "Guest's list is empty" };
-
-      return { error: false, data: guestEmailList };
+      if (!guest) return { error: true, data: 'Guest not found' };
+      return { error: false, data: { verified: true, checked: guest.checked } };
     } catch (error) {
       return { error: true, data: error.message };
     }
@@ -42,7 +45,7 @@ class guestService {
       });
       if (!verifiedGuest) {
         return { error: true, data: 'No se encontro el invitado' };
-      } // 1234 1234
+      }
       if (token !== verifiedGuest.accessCode)
         return { error: false, data: false };
 
