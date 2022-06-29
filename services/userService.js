@@ -1,5 +1,5 @@
 const User = require('../models/userModel');
-const { invitationModel } = require('../models');
+const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
@@ -16,7 +16,7 @@ class UserService {
         profilePicture,
         genre,
       } = body;
-      if (!firstName || !lastName || !email || !password || !genre) {
+      if (!firstName || !lastName || !email || !password) {
         return { error: true, data: 'Please enter all fields' };
       }
       // const guestsMails = await invitationModel.findAll({ attributes: email });
@@ -42,7 +42,6 @@ class UserService {
       });
 
       if (newUser) {
-        // RECIEN AGREGADO Alan.-
         newUser.setInvitation(invitation);
         const updatedGuest = await invitationModel.update(
           { checked: true },

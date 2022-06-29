@@ -33,4 +33,9 @@ Event.init(
   { sequelize: db, modelName: 'events' }
 );
 
+Event.prototype.increaseGuestCount = function () {
+  this.guestsCount++;
+  this.save();
+};
+
 module.exports = Event;

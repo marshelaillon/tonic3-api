@@ -8,17 +8,15 @@ class adminService {
       if (!emails) return { error: true, data: 'Please enter all fields' };
 
       emails.forEach(async email => {
-        const [invitations, created] = await invitationModel.findOrCreate({
+        const [invitation, created] = await invitationModel.findOrCreate({
           where: { email: email },
         });
         if (created) {
+          const event = await eventModel.findByPk(eventId);
+          if (!event) return { error: true, data: 'Event not found' };
+          await invitation.setEvent(event);
+          event.increaseGuestCount();
         }
-
-        // if (eventId) {
-        //   const guest = await invitationModel.create({ email });
-        //   const event = await eventModel.findByPk(body.eventId);
-        //   guest.setEvent(event);
-        // }
       });
 
       return { error: false, data: 'the guests was created successfully' };
@@ -63,6 +61,18 @@ class adminService {
     } catch (error) {
       return { error: true, data: error };
     }
+  }
+
+  static async editEvent(body, id) {
+    try {
+      const editedEvent = await eventModel.update(body, {
+        where: { id },
+        returning: true,
+      });
+      // console.log('edited event', [...editedEvent[1].dataValues]);
+      if (!editedEvent) return { error: true, data: 'Event not found' };
+      return { error: false, data: editedEvent[1][0] };
+    } catch (error) {}
   }
 }
 
