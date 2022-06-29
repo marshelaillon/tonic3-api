@@ -46,7 +46,9 @@ User.init(
       type: S.STRING,
       
     }, */
-  },
+      // require: true,
+    },
+ 
   { sequelize: db, modelName: 'users' }
 );
 

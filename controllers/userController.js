@@ -59,8 +59,9 @@ class UserController {
   // @route   POST /api/users/:id/new-password
   // @access  Public/Private
   static async createNewPassword(req, res) {
-    const { newPassword } = req.body;
+    const newPassword = req.body.password;
     const { id } = req.params;
+    console.log(newPassword, id);
     const { error, data } = await UserService.createNewPassword(
       newPassword,
       id
@@ -103,6 +104,18 @@ class UserController {
     const { error, data } = await UserService.getUsers(req.user);
     if (error) return res.status(401).json(data);
     res.status(200).json(data);
+  }
+
+  static async verifyEmail(req, res) {
+    const { error, data } = await UserService.verifyEmail(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
+
+  static async verifyToken(req, res) {
+    const { error, data } = await UserService.verifyToken(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
   }
 }
 

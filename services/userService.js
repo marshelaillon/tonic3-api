@@ -26,7 +26,10 @@ class UserService {
       // Check if user already exists
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
-
+      // verificamos que si o si tenga invitacion.
+      const invitation = await invitationModel.findOne({ where: { email } });
+      if (!invitation)
+        return { error: true, data: "could'nt found your invitation" };
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -42,10 +45,11 @@ class UserService {
 
       if (newUser) {
         // RECIEN AGREGADO Alan.-
-        // const updatedGues = await invitationModel.update(
-        //   { checked: true },
-        //   { where: email }
-        // );
+        newUser.setInvitation(invitation);
+        const updatedGuest = await invitationModel.update(
+          { checked: true },
+          { where: { email } }
+        );
         await transporter.sendMail(
           {
             from: 'virtualeventst3@gmail.ar',
@@ -255,6 +259,38 @@ console.log(body.tokenCaptcha);
     }
 }; */
 
+  static async verifyEmail(body) {
+    try {
+      const { email } = body;
+      const guest = await invitationModel.findOne({
+        where: { email },
+      });
+
+      if (!guest) return { error: true, data: { verified: false } };
+      return { error: false, data: { verified: true, checked: guest.checked } };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async verifyToken(body) {
+    const { email, token } = body;
+    console.log('email', email, 'token', token);
+    try {
+      const verifiedGuest = await invitationModel.findOne({
+        where: { email: email },
+      });
+      if (!verifiedGuest) {
+        return { error: true, data: 'No se encontro el invitado' };
+      }
+      if (token !== verifiedGuest.accessCode)
+        return { error: false, data: false };
+
+      return { error: false, data: true };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
 }
 
 module.exports = UserService;
