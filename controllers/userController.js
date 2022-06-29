@@ -58,8 +58,9 @@ class UserController {
   // @route   POST /api/users/:id/new-password
   // @access  Public/Private
   static async createNewPassword(req, res) {
-    const { newPassword } = req.body;
+    const newPassword = req.body.password;
     const { id } = req.params;
+    console.log(newPassword, id);
     const { error, data } = await UserService.createNewPassword(
       newPassword,
       id
