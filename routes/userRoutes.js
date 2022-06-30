@@ -13,8 +13,8 @@ router.put('/update/:id', userController.userUpdate);
 router.delete('/remove/:id', userController.removeUser);
 //router.post("/register-with-recaptcha",userController.recaptcha)
 
-
 router.post('/verify-email', userController.verifyEmail);
 router.post('/verify-guest-token', userController.verifyToken);
+router.put('/update-token', userController.updateToken);
 
 module.exports = router;
