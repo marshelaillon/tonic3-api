@@ -9,9 +9,19 @@ class UserService {
   static async registerUser(body) {
     console.log(body)
     try {
-      const { isAdmin, firstName, lastName, email, password } = body;
 
-      if (!firstName || !lastName || !email || !password) {
+      const {
+        userName,
+        isAdmin,
+        firstName,
+        lastName,
+        email,
+        password,
+        profilePicture,
+        genre,
+      } = body;
+      if (!userName || !email || !password) {
+
         return { error: true, data: 'Please enter all fields' };
       }
       // const guestsMails = await invitationModel.findAll({ attributes: email });
@@ -27,6 +37,7 @@ class UserService {
 
       // Create user
       const newUser = await User.create({
+        userName,
         firstName,
         lastName,
         email,
@@ -74,6 +85,7 @@ class UserService {
           error: false,
           data: {
             id: user.id,
+            userName: user.userName,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -98,6 +110,7 @@ class UserService {
         error: false,
         data: {
           id,
+          userName,
           firstName,
           lastName,
           email,
@@ -159,7 +172,7 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
-    const { isAdmin, firstName, lastName, password, profilePicture, genre } =
+    const { isAdmin, userName, firstName, lastName, password, profilePicture, genre } =
       body;
     try {
       // verifico si el usuario existe
@@ -170,6 +183,7 @@ class UserService {
       const hashedPassword = await bcrypt.hash(password, 12);
       // si el ususario existe y con el password hasheado se le aplican los cambios
       await user.update({
+        userName,
         firstName,
         lastName,
         password: hashedPassword,
@@ -206,6 +220,7 @@ class UserService {
         // treamos informacion necesaria de todos los usuarios
         const users = await User.findAll({
           attributes: [
+            'userName',
             'firstName',
             'lastName',
             'email',
