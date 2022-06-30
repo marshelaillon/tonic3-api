@@ -8,6 +8,7 @@ class UserController {
   // @access  Public
   static async registerUser(req, res) {
     const { error, data } = await UserService.registerUser(req.body);
+    console.log(data);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
   }
@@ -32,7 +33,7 @@ class UserController {
   // @access  Private
   static async logoutUser(req, res) {
     res.cookie('token', '', { maxAge: 1 });
-    res.status(201).send({});
+    res.status(200).send({});
   }
 
   // @desc    Persist user session
@@ -40,7 +41,7 @@ class UserController {
   // @access  Private
   static async getMe(req, res) {
     const { error, data } = await UserService.getMe(req.user);
-    if (error) return res.status(400).json({ data });
+    if (error) return res.status(403).json({ data });
     res.status(200).json({ data });
   }
 
@@ -81,6 +82,12 @@ class UserController {
     res.status(200).json(data);
   }
 
+  /*  static async recaptcha (req, res) {
+    const { error, data } = await UserService.recaptcha(req.body)
+    if (error) return res.status(400).json(data);
+    res.status(200).json(data);
+  }
+   */
   // @desc    Remove a new user
   // @route   POST /api/users/register
   // @access  Public & (private¿?)
@@ -97,6 +104,24 @@ class UserController {
     const { error, data } = await UserService.getUsers(req.user);
     if (error) return res.status(401).json(data);
     res.status(200).json(data);
+  }
+
+  static async verifyEmail(req, res) {
+    const { error, data } = await UserService.verifyEmail(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
+
+  static async verifyToken(req, res) {
+    const { error, data } = await UserService.verifyToken(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
+
+  static async updateToken(req, res) {
+    const { error, data } = await UserService.updateToken(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
   }
 }
 
