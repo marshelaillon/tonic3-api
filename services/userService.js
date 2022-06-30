@@ -8,14 +8,11 @@ const { request } = require('express');
 class UserService {
   static async registerUser(body) {
     try {
-      const { isAdmin, firstName, lastName, email, password } = body;
-
-      console.log();
+      const { username, isAdmin, firstName, lastName, email, password } = body;
 
       if (!firstName || !lastName || !email || !password) {
         return { error: true, data: 'Please enter all fields' };
       }
-      // const guestsMails = await invitationModel.findAll({ attributes: email });
       // Check if user already exists
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
@@ -28,6 +25,7 @@ class UserService {
 
       // Create user
       const newUser = await User.create({
+        username,
         firstName,
         lastName,
         email,
