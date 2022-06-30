@@ -7,6 +7,7 @@ const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
+    console.log(body)
     try {
       const {
         isAdmin,
@@ -14,13 +15,11 @@ class UserService {
         lastName,
         email,
         password,
-       
+
 
       } = body;
 
-      console.log();
-     
-      if (!firstName || !lastName || !email || !password) {
+      if (!firstName || !lastName || !email || !password || !isAdmin) {
         return { error: true, data: 'Please enter all fields' };
       }
       // const guestsMails = await invitationModel.findAll({ attributes: email });
@@ -41,7 +40,7 @@ class UserService {
         email,
         password: hashedPassword,
         isAdmin,
-        
+
       });
 
       if (newUser) {
