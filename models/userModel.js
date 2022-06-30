@@ -5,13 +5,18 @@ class User extends S.Model { }
 
 User.init(
   {
-    firstName: {
+    userName:{
       type: S.STRING,
       allowNull: false,
+
+    },
+    firstName: {
+      type: S.STRING,
+      
     },
     lastName: {
       type: S.STRING,
-      allowNull: false,
+      
     },
     email: {
       type: S.STRING,
@@ -44,7 +49,6 @@ User.init(
     },
     genre: {
       type: S.STRING,
-      require: true,
     },
   },
   { sequelize: db, modelName: 'users' }
