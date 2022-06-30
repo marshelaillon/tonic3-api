@@ -103,7 +103,11 @@ class UserService {
   }
 
   static async getMe(user) {
-    const { id, firstName, lastName, email, isAdmin, profilePicture, genre } =
+    if (!user) return {
+      error:true,
+      data: "cannot found token"
+    }
+    const {  id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
       user;
     try {
       return {

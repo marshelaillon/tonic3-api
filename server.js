@@ -23,7 +23,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 
 (async () => {
   try {
-    await db.sync({ force: true });
+    await db.sync({ force: false });
     app.listen(3001, () => {
       console.log(`server is running on port ${PORT}`);
     });
