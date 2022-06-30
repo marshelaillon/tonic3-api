@@ -3,6 +3,7 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
+const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
@@ -13,9 +14,12 @@ class UserService {
         lastName,
         email,
         password,
-        profilePicture,
-        genre,
+       
+
       } = body;
+
+      console.log();
+     
       if (!firstName || !lastName || !email || !password) {
         return { error: true, data: 'Please enter all fields' };
       }
@@ -37,8 +41,7 @@ class UserService {
         email,
         password: hashedPassword,
         isAdmin,
-        profilePicture,
-        genre,
+        
       });
 
       if (newUser) {
@@ -230,6 +233,31 @@ class UserService {
       return { error: true, data: 'Not authorized' };
     }
   }
+
+  /* static async recaptcha (body) {
+    if (!body.tokenCaptcha) {
+        return { error: true, data: "reCaptcha token is missing" };
+    }
+console.log(body.tokenCaptcha);
+
+    try {
+      console.log("entramos al try");
+        const secret = process.env.RECAPTCHA_SECRET_KEY;
+        const googleVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${body.tokenCaptcha}`;
+        const response = await request(googleVerifyUrl);
+        console.log(response, "yo soy el response");
+        const { success } = response.data;
+        if (success) {
+            //hace el register y guarda el user en la base de datos
+            return { error: false, data: true };
+        } else {
+            return { error: true, data: "Invalid Captcha. Try again." };
+        }
+    } catch (e) {
+      console.log("no entramos nunca al try");
+        return { error: true, data: (e, "reCaptcha error.") };
+    }
+}; */
 
   static async verifyEmail(body) {
     try {
