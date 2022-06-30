@@ -7,10 +7,9 @@ const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
+    console.log(body)
     try {
       const { isAdmin, firstName, lastName, email, password } = body;
-
-      console.log();
 
       if (!firstName || !lastName || !email || !password) {
         return { error: true, data: 'Please enter all fields' };
@@ -32,7 +31,6 @@ class UserService {
         lastName,
         email,
         password: hashedPassword,
-        isAdmin,
       });
 
       if (newUser) {
@@ -46,8 +44,7 @@ class UserService {
             from: 'virtualeventst3@gmail.ar',
             to: email,
             subject: 'Register',
-            html: `<div>
-            <h2>REGISTER SUCCESSFULLY!</h2>
+            html: `<div><h2>REGISTER SUCCESSFULLY!</h2>
           </div>`,
           },
           (error, info) => {
@@ -110,7 +107,7 @@ class UserService {
         },
       };
     } catch (error) {
-      return { error: true, data: error };
+      return { error: true, data: 'Not authorized!' };
     }
   }
 
