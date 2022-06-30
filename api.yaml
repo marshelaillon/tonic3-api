@@ -46,7 +46,6 @@ paths:
         400:
           description: Bad request
           content: {}
- 
   /user/logout:
     get:
       tags:
