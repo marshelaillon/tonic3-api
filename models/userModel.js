@@ -5,7 +5,7 @@ class User extends S.Model {}
 
 User.init(
   {
-    username: {
+    userName: {
       type: S.STRING,
       allowNull: false,
     },
@@ -39,16 +39,14 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-    /* profilePicture: {
+    profilePicture: {
       type: S.STRING,
       defaultValue:
         'https://www.pngitem.com/pimgs/m/24-248366_profile-clipart-generic-user-generic-profile-picture-gender.png',
     },
     genre: {
       type: S.STRING,
-      
-    }, */
-    // require: true,
+    },
   },
 
   { sequelize: db, modelName: 'users' }

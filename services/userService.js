@@ -7,10 +7,19 @@ const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
+    console.log(body);
     try {
-      const { username, isAdmin, firstName, lastName, email, password } = body;
-
-      if (!firstName || !lastName || !email || !password) {
+      const {
+        userName,
+        isAdmin,
+        firstName,
+        lastName,
+        email,
+        password,
+        profilePicture,
+        genre,
+      } = body;
+      if (!userName || !email || !password) {
         return { error: true, data: 'Please enter all fields' };
       }
       // Check if user already exists
@@ -25,12 +34,11 @@ class UserService {
 
       // Create user
       const newUser = await User.create({
-        username,
+        userName,
         firstName,
         lastName,
         email,
         password: hashedPassword,
-        isAdmin,
       });
 
       if (newUser) {
@@ -44,8 +52,7 @@ class UserService {
             from: 'virtualeventst3@gmail.ar',
             to: email,
             subject: 'Register',
-            html: `<div>
-            <h2>REGISTER SUCCESSFULLY!</h2>
+            html: `<div><h2>REGISTER SUCCESSFULLY!</h2>
           </div>`,
           },
           (error, info) => {
@@ -75,6 +82,7 @@ class UserService {
           error: false,
           data: {
             id: user.id,
+            userName: user.userName,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -92,13 +100,22 @@ class UserService {
   }
 
   static async getMe(user) {
-    const { id, firstName, lastName, email, isAdmin, profilePicture, genre } =
-      user;
+    const {
+      id,
+      userName,
+      firstName,
+      lastName,
+      email,
+      isAdmin,
+      profilePicture,
+      genre,
+    } = user;
     try {
       return {
         error: false,
         data: {
           id,
+          userName,
           firstName,
           lastName,
           email,
@@ -108,7 +125,7 @@ class UserService {
         },
       };
     } catch (error) {
-      return { error: true, data: error };
+      return { error: true, data: 'Not authorized!' };
     }
   }
 
@@ -160,8 +177,15 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
-    const { isAdmin, firstName, lastName, password, profilePicture, genre } =
-      body;
+    const {
+      isAdmin,
+      userName,
+      firstName,
+      lastName,
+      password,
+      profilePicture,
+      genre,
+    } = body;
     try {
       // verifico si el usuario existe
       const user = await User.findByPk(params);
@@ -171,6 +195,7 @@ class UserService {
       const hashedPassword = await bcrypt.hash(password, 12);
       // si el ususario existe y con el password hasheado se le aplican los cambios
       await user.update({
+        userName,
         firstName,
         lastName,
         password: hashedPassword,
@@ -207,6 +232,7 @@ class UserService {
         // treamos informacion necesaria de todos los usuarios
         const users = await User.findAll({
           attributes: [
+            'userName',
             'firstName',
             'lastName',
             'email',
