@@ -46,6 +46,34 @@ paths:
         400:
           description: Bad request
           content: {}
+ 
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      responses:
+        200:
+          description: Logout successfully
+          content: {}
+  /getMe:
+    get:
+      tags:
+        - user
+      summary: Returns logged in user information
+      responses:
+        200:
+          description: Returns logged in user info except for the password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        403:
+          description: Not authorized
+          content: {}
+      security:
+        - getMe_auth:
+            - read: user
   /guests/add-guest:
     post:
       tags:

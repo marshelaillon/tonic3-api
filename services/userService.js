@@ -52,8 +52,7 @@ class UserService {
             from: 'virtualeventst3@gmail.ar',
             to: email,
             subject: 'Register',
-            html: `<div>
-            <h2>REGISTER SUCCESSFULLY!</h2>
+            html: `<div><h2>REGISTER SUCCESSFULLY!</h2>
           </div>`,
           },
           (error, info) => {
@@ -116,7 +115,7 @@ class UserService {
         },
       };
     } catch (error) {
-      return { error: true, data: error };
+      return { error: true, data: 'Not authorized!' };
     }
   }
 

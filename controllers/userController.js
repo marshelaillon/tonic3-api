@@ -32,7 +32,7 @@ class UserController {
   // @access  Private
   static async logoutUser(req, res) {
     res.cookie('token', '', { maxAge: 1 });
-    res.status(201).send({});
+    res.status(200).send({});
   }
 
   // @desc    Persist user session
@@ -40,7 +40,7 @@ class UserController {
   // @access  Private
   static async getMe(req, res) {
     const { error, data } = await UserService.getMe(req.user);
-    if (error) return res.status(400).json({ data });
+    if (error) return res.status(403).json({ data });
     res.status(200).json({ data });
   }
 
