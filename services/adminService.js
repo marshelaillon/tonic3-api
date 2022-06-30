@@ -1,5 +1,6 @@
 const { invitationModel, eventModel } = require('../models');
 const jwt = require('jsonwebtoken');
+const transporter = require('../utils/nodemailConfig');
 
 class adminService {
   static async addGuest(body) {
@@ -46,6 +47,53 @@ class adminService {
     }
   }
 
+  static async sendInvitations(body) {
+    try {
+      const { event } = body;
+
+      const { count, rows: guests } = await invitationModel.findAndCountAll({
+        where: { send: false },
+      });
+
+      if (!guests) return { error: true, data: 'Not guests found' };
+
+      guests.map(async (guest, i) => {
+        await transporter.sendMail(
+          {
+            from: 'virtualeventst3@gmail.ar',
+            to: guest.email,
+            subject: 'Invitation',
+            html: `<div style="text-align: center;">
+            <h2>Invitation for ${event.title}!</h2>
+            <hr>
+            <h4> Event will take place in ${event.date} </h4>
+            <p>We're waiting for you, click on the following link bellow</p>
+            <a href="http://localhost:3000/home"> asfdsdfhfdgdjghfkhjkghjlg </a>
+            <p>Don't lose the next token, you will need it to access to the event!</p>
+            <p>${guest.accessCode}</p>
+            <p>See you soon!</p>
+          </div>`,
+          },
+          (error, info) => {
+            if (error) {
+              return { error: true, data: 'Something went wrong!' };
+            } else {
+              return {
+                error: false,
+                data: 'Email sent successfully!',
+              };
+            }
+          }
+        );
+        await guest.setSend();
+      });
+
+      return { error: false, data: `We just sent ${count} invitations` };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
   static async addEvent(body) {
     try {
       const { title, url, description } = body;
@@ -54,10 +102,6 @@ class adminService {
       const event = await eventModel.create(body);
       if (!event) return { error: true, data: 'cannot create event' };
       return { error: false, data: 'created successfully' };
-
-      // if (!isCreated && event)
-      //   return { error: false, data: 'already exists in db' };
-      // if (isCreated) return { error: false, data: 'created successfully' };
     } catch (error) {
       return { error: true, data: error };
     }

@@ -8,18 +8,10 @@ const { request } = require('express');
 class UserService {
   static async registerUser(body) {
     try {
-      const {
-        isAdmin,
-        firstName,
-        lastName,
-        email,
-        password,
-       
-
-      } = body;
+      const { isAdmin, firstName, lastName, email, password } = body;
 
       console.log();
-     
+
       if (!firstName || !lastName || !email || !password) {
         return { error: true, data: 'Please enter all fields' };
       }
@@ -41,7 +33,6 @@ class UserService {
         email,
         password: hashedPassword,
         isAdmin,
-        
       });
 
       if (newUser) {
@@ -140,8 +131,7 @@ class UserService {
       const verificationLink = `http://localhost:3000/new-password/${user.id}/${token}`;
       await transporter.sendMail({
         from: 'virtualevents@gmail.ar',
-        // ? DESCOMENTAR LUEGO: to: user.email,
-        to: `marshel.aillon@gmail.com, maxirecibos182@gmail.com, benitez.alanez@gmail.com`,
+        to: user.email,
         subject: 'NEW PASSWORD!',
         html: `<div>
               <h2>Click on the following link to reset your password: </h2>
@@ -287,6 +277,35 @@ console.log(body.tokenCaptcha);
         return { error: false, data: false };
 
       return { error: false, data: true };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async updateToken(body) {
+    try {
+      const { email } = body;
+      const guest = await invitationModel.findOne({ where: { email } });
+      const token = await guest.updateToken();
+
+      if (!token) return { error: true, data: 'Cannot generate a new token' };
+
+      await transporter.sendMail(
+        {
+          from: 'virtualevents@gmail.ar',
+          to: email,
+          subject: 'NEW TOKEN',
+          html: `<div>
+              <h2>This is your new access code: ${token}</h2>
+            </div>`,
+        },
+        (error, info) => {
+          if (error) {
+            return { error: true, data: 'Something went wrong!' };
+          }
+        }
+      );
+      return { error: false, data: 'Token updated successfully' };
     } catch (error) {
       return { error: true, data: error.message };
     }

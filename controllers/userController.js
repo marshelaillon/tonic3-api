@@ -81,8 +81,8 @@ class UserController {
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
-  
- /*  static async recaptcha (req, res) {
+
+  /*  static async recaptcha (req, res) {
     const { error, data } = await UserService.recaptcha(req.body)
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
@@ -117,8 +117,12 @@ class UserController {
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
   }
+
+  static async updateToken(req, res) {
+    const { error, data } = await UserService.updateToken(req.body);
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
 }
-
-
 
 module.exports = UserController;
