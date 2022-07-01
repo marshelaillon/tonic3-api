@@ -11,7 +11,7 @@ router.post('/forgot-password', userController.forgotPassword);
 router.post('/:id/new-password', userController.createNewPassword);
 router.put('/update/:id', userController.userUpdate);
 router.delete('/remove/:id', userController.removeUser);
-//router.post("/register-with-recaptcha",userController.recaptcha)
+//router.post("/register-with-hcaptcha", userController.hcaptcha)
 
 router.post('/verify-email', userController.verifyEmail);
 router.post('/verify-guest-token', userController.verifyToken);

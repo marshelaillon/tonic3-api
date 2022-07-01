@@ -3,13 +3,11 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
-const { request } = require('express');
+//const {verify} = require("hcaptcha")
 
 class UserService {
   static async registerUser(body) {
-    console.log(body)
     try {
-
       const {
         userName,
         isAdmin,
@@ -21,10 +19,8 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
-
         return { error: true, data: 'Please enter all fields' };
       }
-      // const guestsMails = await invitationModel.findAll({ attributes: email });
       // Check if user already exists
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
@@ -103,8 +99,21 @@ class UserService {
   }
 
   static async getMe(user) {
-    const { id, firstName, lastName, email, isAdmin, profilePicture, genre } =
-      user;
+    if (!user)
+      return {
+        error: true,
+        data: 'cannot found token',
+      };
+    const {
+      id,
+      userName,
+      firstName,
+      lastName,
+      email,
+      isAdmin,
+      profilePicture,
+      genre,
+    } = user;
     try {
       return {
         error: false,
@@ -172,8 +181,15 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
-    const { isAdmin, userName, firstName, lastName, password, profilePicture, genre } =
-      body;
+    const {
+      isAdmin,
+      userName,
+      firstName,
+      lastName,
+      password,
+      profilePicture,
+      genre,
+    } = body;
     try {
       // verifico si el usuario existe
       const user = await User.findByPk(params);
@@ -236,28 +252,26 @@ class UserService {
     }
   }
 
-  /* static async recaptcha (body) {
-    if (!body.tokenCaptcha) {
-        return { error: true, data: "reCaptcha token is missing" };
+  /* static async hcaptcha (body) {
+    if (!body.tokenCap) {
+        return { error: true, data: "hCaptcha token is missing" };
     }
-console.log(body.tokenCaptcha);
+console.log(body.tokenCap);
 
     try {
       console.log("entramos al try");
-        const secret = process.env.RECAPTCHA_SECRET_KEY;
-        const googleVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${body.tokenCaptcha}`;
-        const response = await request(googleVerifyUrl);
-        console.log(response, "yo soy el response");
-        const { success } = response.data;
+        const secret = 0xA4D91Cc08cc9f0C6ec4DC75224992aeB5155BB9C;
+        
+        const { success } = await verify(secret, body.tokenCap);
+        console.log("yo soy el response", success);
+       
         if (success) {
-            //hace el register y guarda el user en la base de datos
             return { error: false, data: true };
         } else {
-            return { error: true, data: "Invalid Captcha. Try again." };
+            return { error: true, data: "Invalid Captcha." };
         }
     } catch (e) {
-      console.log("no entramos nunca al try");
-        return { error: true, data: (e, "reCaptcha error.") };
+        return { error: true, data: (e, "reCaptcha error. Try again.") };
     }
 }; */
 

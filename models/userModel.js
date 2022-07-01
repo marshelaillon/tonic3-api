@@ -1,23 +1,19 @@
 const S = require('sequelize');
 const db = require('../db');
 
-class User extends S.Model { }
+class User extends S.Model {}
 
 User.init(
   {
-
-    userName:{
+    userName: {
       type: S.STRING,
       allowNull: false,
-
     },
     firstName: {
       type: S.STRING,
-      
     },
     lastName: {
       type: S.STRING,
-      
     },
     email: {
       type: S.STRING,
@@ -43,7 +39,8 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-     /* profilePicture: {
+     profilePicture: {
+
       type: S.STRING,
       defaultValue:
         'https://www.pngitem.com/pimgs/m/24-248366_profile-clipart-generic-user-generic-profile-picture-gender.png',
@@ -51,8 +48,7 @@ User.init(
     genre: {
       type: S.STRING,
 
-    }, */
-
+    }, 
   },
 
   { sequelize: db, modelName: 'users' }
