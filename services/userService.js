@@ -7,7 +7,6 @@ const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
-    console.log(body)
     try {
 
       const {
@@ -42,6 +41,7 @@ class UserService {
         lastName,
         email,
         password: hashedPassword,
+
       });
 
       if (newUser) {
@@ -104,10 +104,10 @@ class UserService {
 
   static async getMe(user) {
     if (!user) return {
-      error:true,
+      error: true,
       data: "cannot found token"
     }
-    const {  id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
+    const { id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
       user;
     try {
       return {

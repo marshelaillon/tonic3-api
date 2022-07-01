@@ -6,18 +6,18 @@ class User extends S.Model { }
 User.init(
   {
 
-    userName:{
+    userName: {
       type: S.STRING,
       allowNull: false,
 
     },
     firstName: {
       type: S.STRING,
-      
+
     },
     lastName: {
       type: S.STRING,
-      
+
     },
     email: {
       type: S.STRING,
@@ -43,15 +43,15 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-    /* profilePicture: {
-      type: S.STRING,
-      defaultValue:
-        'https://www.pngitem.com/pimgs/m/24-248366_profile-clipart-generic-user-generic-profile-picture-gender.png',
-    },
-    genre: {
-      type: S.STRING,
+    //     profilePicture: {
+    //   type: S.STRING,
+    //   defaultValue:
+    //     'https://www.pngitem.com/pimgs/m/24-248366_profile-clipart-generic-user-generic-profile-picture-gender.png',
+    // },
+    // genre: {
+    //   type: S.STRING,
 
-    },
+    // },
 
   },
 
