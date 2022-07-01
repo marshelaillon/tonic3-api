@@ -7,7 +7,6 @@ const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
-    console.log(body);
     try {
       const {
         userName,
@@ -100,6 +99,11 @@ class UserService {
   }
 
   static async getMe(user) {
+    if (!user)
+      return {
+        error: true,
+        data: 'cannot found token',
+      };
     const {
       id,
       userName,
