@@ -7,9 +7,7 @@ const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
-    console.log(body)
     try {
-
       const {
         userName,
         isAdmin,
@@ -21,10 +19,8 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
-
         return { error: true, data: 'Please enter all fields' };
       }
-      // const guestsMails = await invitationModel.findAll({ attributes: email });
       // Check if user already exists
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
@@ -103,12 +99,21 @@ class UserService {
   }
 
   static async getMe(user) {
-    if (!user) return {
-      error:true,
-      data: "cannot found token"
-    }
-    const {  id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
-      user;
+    if (!user)
+      return {
+        error: true,
+        data: 'cannot found token',
+      };
+    const {
+      id,
+      userName,
+      firstName,
+      lastName,
+      email,
+      isAdmin,
+      profilePicture,
+      genre,
+    } = user;
     try {
       return {
         error: false,
@@ -176,8 +181,15 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
-    const { isAdmin, userName, firstName, lastName, password, profilePicture, genre } =
-      body;
+    const {
+      isAdmin,
+      userName,
+      firstName,
+      lastName,
+      password,
+      profilePicture,
+      genre,
+    } = body;
     try {
       // verifico si el usuario existe
       const user = await User.findByPk(params);
