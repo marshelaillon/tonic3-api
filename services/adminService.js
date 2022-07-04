@@ -12,12 +12,10 @@ class adminService {
         const [invitation, created] = await invitationModel.findOrCreate({
           where: { email: email },
         });
-        if (created) {
-          const event = await eventModel.findByPk(eventId);
-          if (!event) return { error: true, data: 'Event not found' };
-          await invitation.setEvent(event);
-          await event.increaseGuestCount();
-        }
+        const event = await eventModel.findByPk(eventId);
+        if (!event) return { error: true, data: 'Event not found' };
+        await invitation.setEvent(event);
+        await event.increaseGuestCount();
       });
 
       return { error: false, data: 'the guests was created successfully' };
