@@ -12,12 +12,10 @@ class adminService {
         const [invitation, created] = await invitationModel.findOrCreate({
           where: { email: email },
         });
-        if (created) {
-          const event = await eventModel.findByPk(eventId);
-          if (!event) return { error: true, data: 'Event not found' };
-          await invitation.setEvent(event);
-          await event.increaseGuestCount();
-        }
+        const event = await eventModel.findByPk(eventId);
+        if (!event) return { error: true, data: 'Event not found' };
+        await invitation.setEvent(event);
+        await event.increaseGuestCount();
       });
 
       return { error: false, data: 'the guests was created successfully' };
@@ -101,7 +99,8 @@ class adminService {
         return { error: true, data: 'All fields are required' };
       const event = await eventModel.create(body);
       if (!event) return { error: true, data: 'cannot create event' };
-      return { error: false, data: 'created successfully' };
+      //cambien la data de event{maxi}
+      return { error: false, data: event };
     } catch (error) {
       return { error: true, data: error };
     }
@@ -126,7 +125,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) {}
+    } catch (error) { }
   }
 
   static async getAllUsers(body) {
