@@ -41,6 +41,20 @@ class adminController {
     // } else res.status(403).json({ data: 'Unauthorized user' });
   }
 
+  static async getAllEvents(req, res) {
+    // if (req.user.isAdmin) {
+    const { error, data } = await adminService.getAllEvents();
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+    // } else res.status(403).json({ data: 'Unauthorized user' });
+
+    // const data = {
+    //   count: 1,
+    //   rows: [{ email: 'evento@', register: 'no', send: true, event: 500 }],
+    // };
+    // res.status(200).json({ data });
+  }
+
   static async editEvent(req, res) {
     // if (req.user.isAdmin) {
     const { error, data } = await adminService.editEvent(
@@ -50,6 +64,20 @@ class adminController {
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
     // } else res.status(403).json({ data: 'Unauthorized user' });
+  }
+
+  static async getAllUsers(req, res) {
+    // if (req.user.isAdmin) {
+    const { error, data } = await adminService.getAllUsers();
+    if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+    // } else res.status(403).json({ data: 'Unauthorized user' });
+
+    // const data = {
+    //   count: 1,
+    //   rows: [{ email: 'pepito@', register: 'si', send: false, event: 1 }],
+    // };
+    // res.status(200).json({ data });
   }
 }
 
