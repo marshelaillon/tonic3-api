@@ -3,7 +3,11 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
+<<<<<<< HEAD
 //const {verify} = require("hcaptcha")
+=======
+//const { request } = require('express');
+>>>>>>> ff39d709a7625a0c2def88718b65e09e98c7d33c
 
 class UserService {
   static async registerUser(body) {
@@ -19,6 +23,7 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
+        console.log(userName, email, password, "ESTO ES UN CLGOP")
         return { error: true, data: 'Please enter all fields' };
       }
       // Check if user already exists
@@ -38,6 +43,7 @@ class UserService {
         lastName,
         email,
         password: hashedPassword,
+
       });
 
       if (newUser) {
@@ -99,21 +105,13 @@ class UserService {
   }
 
   static async getMe(user) {
-    if (!user)
-      return {
-        error: true,
-        data: 'cannot found token',
-      };
-    const {
-      id,
-      userName,
-      firstName,
-      lastName,
-      email,
-      isAdmin,
-      profilePicture,
-      genre,
-    } = user;
+    if (!user) return {
+      error: true,
+      data: "cannot found token"
+    }
+    const { id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
+      user;
+
     try {
       return {
         error: false,

@@ -1,7 +1,7 @@
 const S = require('sequelize');
 const db = require('../db');
 
-class User extends S.Model {}
+class User extends S.Model { }
 
 User.init(
   {
@@ -39,8 +39,8 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-     profilePicture: {
-
+  
+    profilePicture: {
       type: S.STRING,
       defaultValue:
         'https://www.pngitem.com/pimgs/m/24-248366_profile-clipart-generic-user-generic-profile-picture-gender.png',
