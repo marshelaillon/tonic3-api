@@ -1,7 +1,7 @@
 const S = require('sequelize');
 const db = require('../db');
 
-class Event extends S.Model {}
+class Event extends S.Model { }
 
 Event.init(
   {

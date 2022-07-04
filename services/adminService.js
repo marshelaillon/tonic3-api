@@ -1,6 +1,7 @@
 const { invitationModel, eventModel, userModel } = require('../models');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
+const { findAll } = require('../models/userModel');
 
 class adminService {
   static async addGuest(body) {
@@ -9,13 +10,17 @@ class adminService {
       if (!emails) return { error: true, data: 'Please enter all fields' };
 
       emails.forEach(async email => {
-        const [invitation, created] = await invitationModel.findOrCreate({
-          where: { email: email },
+        const [invitation, create] = await invitationModel.findOrCreate({
+          where: { email: email, eventId: eventId },
         });
-        const event = await eventModel.findByPk(eventId);
-        if (!event) return { error: true, data: 'Event not found' };
-        await invitation.setEvent(event);
-        await event.increaseGuestCount();
+        if (create) {
+          const event = await eventModel.findByPk(eventId);
+          if (!event) return { error: true, data: 'Event not found' };
+          await invitation.setEvent(event);
+          await event.increaseGuestCount();
+        } else {
+          return { error: true, data: 'Llego el no deseado' };
+        }
       });
 
       return { error: false, data: 'the guests was created successfully' };
