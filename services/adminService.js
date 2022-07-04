@@ -101,7 +101,8 @@ class adminService {
         return { error: true, data: 'All fields are required' };
       const event = await eventModel.create(body);
       if (!event) return { error: true, data: 'cannot create event' };
-      return { error: false, data: 'created successfully' };
+      //cambien la data de event{maxi}
+      return { error: false, data: event };
     } catch (error) {
       return { error: true, data: error };
     }
@@ -116,7 +117,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) {}
+    } catch (error) { }
   }
 }
 

@@ -3,12 +3,11 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
-const { request } = require('express');
+//const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
     try {
-
       const {
         userName,
         isAdmin,
@@ -20,10 +19,9 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
-
+        console.log(userName, email, password, "ESTO ES UN CLGOP")
         return { error: true, data: 'Please enter all fields' };
       }
-      // const guestsMails = await invitationModel.findAll({ attributes: email });
       // Check if user already exists
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
@@ -109,6 +107,7 @@ class UserService {
     }
     const { id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
       user;
+
     try {
       return {
         error: false,
@@ -176,8 +175,15 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
-    const { isAdmin, userName, firstName, lastName, password, profilePicture, genre } =
-      body;
+    const {
+      isAdmin,
+      userName,
+      firstName,
+      lastName,
+      password,
+      profilePicture,
+      genre,
+    } = body;
     try {
       // verifico si el usuario existe
       const user = await User.findByPk(params);
