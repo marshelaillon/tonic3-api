@@ -1,4 +1,4 @@
-const { invitationModel, eventModel } = require('../models');
+const { invitationModel, eventModel, userModel } = require('../models');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
 
@@ -16,7 +16,7 @@ class adminService {
           const event = await eventModel.findByPk(eventId);
           if (!event) return { error: true, data: 'Event not found' };
           await invitation.setEvent(event);
-          event.increaseGuestCount();
+          await event.increaseGuestCount();
         }
       });
 
@@ -108,6 +108,16 @@ class adminService {
     }
   }
 
+  static async getAllEvents(body) {
+    try {
+      const { count, rows } = await eventModel.findAndCountAll();
+      if (!count) return { error: true, data: 'Event list is empty' };
+      return { error: false, data: { count, rows } };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
   static async editEvent(body, id) {
     try {
       const editedEvent = await eventModel.update(body, {
@@ -118,6 +128,16 @@ class adminService {
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
     } catch (error) { }
+  }
+
+  static async getAllUsers(body) {
+    try {
+      const { count, rows } = await userModel.findAndCountAll();
+      if (!count) return { error: true, data: 'Event list is empty' };
+      return { error: false, data: { count, rows } };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
   }
 }
 

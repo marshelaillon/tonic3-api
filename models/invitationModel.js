@@ -37,7 +37,6 @@ Invitation.beforeCreate(async invitations => {
 });
 
 Invitation.prototype.setSend = function () {
-  console.log('setSendModel', this);
   this.setDataValue('send', !this.getDataValue('send'));
   this.save();
 };
@@ -46,7 +45,6 @@ Invitation.prototype.updateToken = async function () {
     const randomString = Math.random().toString(36);
     const accessCode = (await bcrypt.hash(randomString, 2)).slice(0, 20);
     this.accessCode = accessCode;
-    this.save();
     return accessCode;
   } catch (error) {
     return error;
