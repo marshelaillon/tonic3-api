@@ -39,7 +39,7 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-
+  
     profilePicture: {
       type: S.STRING,
       defaultValue:
@@ -47,7 +47,8 @@ User.init(
     },
     genre: {
       type: S.STRING,
-    },
+
+    }, 
   },
 
   { sequelize: db, modelName: 'users' }
