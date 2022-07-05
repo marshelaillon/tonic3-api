@@ -26,7 +26,9 @@ class adminService {
 
   static async getAllGuests() {
     try {
-      const { count, rows } = await invitationModel.findAndCountAll();
+      const { count, rows } = await invitationModel.findAndCountAll({
+        attributes: ['id', 'email', 'send', 'checked', 'createdAt', 'eventId'],
+      });
       if (!count) return { error: true, data: 'Empty guests list' };
       return { error: false, data: { count, rows } };
     } catch (error) {
@@ -108,7 +110,15 @@ class adminService {
 
   static async getAllEvents(body) {
     try {
-      const { count, rows } = await eventModel.findAndCountAll();
+      const { count, rows } = await eventModel.findAndCountAll({
+        attributes: [
+          'id',
+          'title',
+          'assistantsCount',
+          'guestsCount',
+          'createdAt',
+        ],
+      });
       if (!count) return { error: true, data: 'Event list is empty' };
       return { error: false, data: { count, rows } };
     } catch (error) {
@@ -125,12 +135,21 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) { }
+    } catch (error) {}
   }
 
   static async getAllUsers(body) {
     try {
-      const { count, rows } = await userModel.findAndCountAll();
+      const { count, rows } = await userModel.findAndCountAll({
+        attributes: [
+          'id',
+          'email',
+          'userName',
+          'isAdmin',
+          'genre',
+          'createdAt',
+        ],
+      });
       if (!count) return { error: true, data: 'Event list is empty' };
       return { error: false, data: { count, rows } };
     } catch (error) {
