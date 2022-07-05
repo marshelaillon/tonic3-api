@@ -20,7 +20,7 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
-        console.log(userName, email, password, "ESTO ES UN CLGOP")
+        console.log(userName, email, password, 'ESTO ES UN CLGOP');
         return { error: true, data: 'Please enter all fields' };
       }
       // Check if user already exists
@@ -40,7 +40,6 @@ class UserService {
         lastName,
         email,
         password: hashedPassword,
-
       });
 
       if (newUser) {
@@ -102,12 +101,21 @@ class UserService {
   }
 
   static async getMe(user) {
-    if (!user) return {
-      error: true,
-      data: "cannot found token"
-    }
-    const { id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
-      user;
+    if (!user)
+      return {
+        error: true,
+        data: 'cannot found token',
+      };
+    const {
+      id,
+      userName,
+      firstName,
+      lastName,
+      email,
+      isAdmin,
+      profilePicture,
+      genre,
+    } = user;
 
     try {
       return {
@@ -328,6 +336,27 @@ console.log(body.tokenCap);
         }
       );
       return { error: false, data: 'Token updated successfully' };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async getPendingEvents(userId) {
+    try {
+      const user = await User.findByPk(userId);
+      if (!user) return { error: true, data: 'User does not exist' };
+      const events = await invitationModel.findAll({
+        where: { email: user.email },
+        attributes: [],
+        include: [
+          {
+            model: eventModel,
+            as: 'event',
+            attributes: ['title', 'description', 'date'],
+          },
+        ],
+      });
+      return { error: false, data: events };
     } catch (error) {
       return { error: true, data: error.message };
     }
