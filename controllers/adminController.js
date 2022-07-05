@@ -11,7 +11,7 @@ class adminController {
 
   static async removeGuest(req, res) {
     // if (req.user.isAdmin) {
-    const { error, data } = await adminService.removeGuest(req.body);
+    const { error, data } = await adminService.removeGuest(req.params.id);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
     // } else res.status(403).json({ data: 'Unauthorized user' });
