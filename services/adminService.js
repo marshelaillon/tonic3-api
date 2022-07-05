@@ -52,17 +52,16 @@ class adminService {
     }
   }
 
-  static async sendInvitations(body) {
+  static async sendInvitations() {
     try {
-      const { event } = body;
 
       const { count, rows: guests } = await invitationModel.findAndCountAll({
         where: { send: false },
       });
-
       if (!guests) return { error: true, data: 'Not guests found' };
 
       guests.map(async (guest, i) => {
+        const event = await eventModel.findByPk(guest.eventId)
         await transporter.sendMail(
           {
             from: 'virtualeventst3@gmail.ar',
