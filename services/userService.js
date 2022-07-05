@@ -19,7 +19,6 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
-        console.log(userName, email, password, "ESTO ES UN CLGOP")
         return { error: true, data: 'Please enter all fields' };
       }
       // Check if user already exists
@@ -287,7 +286,6 @@ console.log(body.tokenCaptcha);
 
   static async verifyToken(body) {
     const { email, token } = body;
-    console.log('email', email, 'token', token);
     try {
       const verifiedGuest = await invitationModel.findOne({
         where: { email: email },

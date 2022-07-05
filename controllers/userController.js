@@ -8,7 +8,6 @@ class UserController {
   // @access  Public
   static async registerUser(req, res) {
     const { error, data } = await UserService.registerUser(req.body);
-    console.log(data);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
   }

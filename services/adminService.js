@@ -43,8 +43,7 @@ class adminService {
 
   static async removeGuest(body) {
     try {
-      const { id } = body;
-      const removedGuest = await invitationModel.destroy({ where: { id } });
+      const removedGuest = await invitationModel.destroy({ where: { id: body } });
       if (!removedGuest) return { error: true, data: 'Guest not found' };
       return { error: false, data: 'Delete complete' };
     } catch (error) {
@@ -139,7 +138,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) {}
+    } catch (error) { }
   }
 
   static async getAllUsers(body) {

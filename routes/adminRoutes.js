@@ -4,7 +4,7 @@ const adminController = require('../controllers/adminController');
 // rutas para el admin. PROTEGERLAS  !!!!!
 router.get('/send-invitations', adminController.sendInvitations);
 router.post('/add-guest', adminController.addGuest);
-router.delete('/remove-guest/', adminController.removeGuest);
+router.delete('/remove-guest/:id', adminController.removeGuest);
 router.get('/get-all-guests', adminController.getAllGuests);
 router.get('/get-all-users', adminController.getAllUsers);
 router.get('/get-all-events', adminController.getAllEvents);
