@@ -3,11 +3,8 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
-<<<<<<< HEAD
 //const {verify} = require("hcaptcha")
-=======
 //const { request } = require('express');
->>>>>>> ff39d709a7625a0c2def88718b65e09e98c7d33c
 
 class UserService {
   static async registerUser(body) {
@@ -179,12 +176,13 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
+  
     const {
       isAdmin,
       userName,
       firstName,
       lastName,
-      password,
+     // password,
       profilePicture,
       genre,
     } = body;
@@ -194,18 +192,18 @@ class UserService {
       //si es usuario no existe
       if (!user) return { error: true, data: 'User does not exist' };
       // si el usuario existe le hasheamos el password si lo tiene
-      const hashedPassword = await bcrypt.hash(password, 12);
+      //const hashedPassword = await bcrypt.hash(password, 12);
       // si el ususario existe y con el password hasheado se le aplican los cambios
-      await user.update({
+      const updateUserData = await user.update({
         userName,
         firstName,
         lastName,
-        password: hashedPassword,
+       // password: hashedPassword,
         profilePicture,
         genre,
       });
       // devolvemos errore si los hubo y una data
-      return { error: false, data: 'Update successfully' };
+      return { error: false, data: updateUserData };
     } catch (error) {
       return { error: true, data: error };
     }
