@@ -99,12 +99,15 @@ class adminService {
 
   static async addEvent(body) {
     try {
-      const { title, url, description } = body;
-      if (!title || !url || !description)
+      const { title, url, description, date } = body;
+      if (!title || !url || !description || !date)
         return { error: true, data: 'All fields are required' };
       const event = await eventModel.create(body);
-      if (!event) return { error: true, data: 'cannot create event' };
+      if (!event) return { error: true, data: 'Cannot create event' };
       //cambien la data de event{maxi}
+      // ! MOSTRAR A LES MUCHACHES xd
+      console.log('Fecha del evento en mi zona horaria', event.getLocalDate());
+      console.log('Tiempo restante:', event.getLeftTimeForEvent());
       return { error: false, data: event };
     } catch (error) {
       return { error: true, data: error };
@@ -130,7 +133,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) { }
+    } catch (error) {}
   }
 
   static async getAllUsers(body) {

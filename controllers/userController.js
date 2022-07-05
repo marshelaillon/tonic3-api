@@ -123,6 +123,13 @@ class UserController {
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
   }
+
+  static async getPendingEvents(req, res) {
+    //const { error, data } = await UserService.getEvents(req.user);
+    const { error, data } = await UserService.getPendingEvents(req.params.id);
+    if (error) return res.status(400).json(data);
+    res.status(200).json({ data });
+  }
 }
 
 module.exports = UserController;
