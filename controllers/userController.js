@@ -81,8 +81,8 @@ class UserController {
     res.status(200).json(data);
   }
 
-  /*  static async recaptcha (req, res) {
-    const { error, data } = await UserService.recaptcha(req.body)
+  /*  static async hcaptcha (req, res) {
+    const { error, data } = await UserService.hcaptcha(req.body)
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
@@ -120,6 +120,13 @@ class UserController {
   static async updateToken(req, res) {
     const { error, data } = await UserService.updateToken(req.body);
     if (error) return res.status(400).json({ data });
+    res.status(200).json({ data });
+  }
+
+  static async getPendingEvents(req, res) {
+    //const { error, data } = await UserService.getEvents(req.user);
+    const { error, data } = await UserService.getPendingEvents(req.params.id);
+    if (error) return res.status(400).json(data);
     res.status(200).json({ data });
   }
 }

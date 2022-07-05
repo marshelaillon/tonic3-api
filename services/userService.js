@@ -3,6 +3,7 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
+//const {verify} = require("hcaptcha")
 //const { request } = require('express');
 
 class UserService {
@@ -19,6 +20,7 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
+
         return { error: true, data: 'Please enter all fields' };
       }
       // Check if user already exists
@@ -38,7 +40,6 @@ class UserService {
         lastName,
         email,
         password: hashedPassword,
-
       });
 
       if (newUser) {
@@ -100,12 +101,21 @@ class UserService {
   }
 
   static async getMe(user) {
-    if (!user) return {
-      error: true,
-      data: "cannot found token"
-    }
-    const { id, userName, firstName, lastName, email, isAdmin, profilePicture, genre } =
-      user;
+    if (!user)
+      return {
+        error: true,
+        data: 'cannot found token',
+      };
+    const {
+      id,
+      userName,
+      firstName,
+      lastName,
+      email,
+      isAdmin,
+      profilePicture,
+      genre,
+    } = user;
 
     try {
       return {
@@ -174,12 +184,13 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
+  
     const {
       isAdmin,
       userName,
       firstName,
       lastName,
-      password,
+     // password,
       profilePicture,
       genre,
     } = body;
@@ -189,18 +200,18 @@ class UserService {
       //si es usuario no existe
       if (!user) return { error: true, data: 'User does not exist' };
       // si el usuario existe le hasheamos el password si lo tiene
-      const hashedPassword = await bcrypt.hash(password, 12);
+      //const hashedPassword = await bcrypt.hash(password, 12);
       // si el ususario existe y con el password hasheado se le aplican los cambios
-      await user.update({
+      const updateUserData = await user.update({
         userName,
         firstName,
         lastName,
-        password: hashedPassword,
+       // password: hashedPassword,
         profilePicture,
         genre,
       });
       // devolvemos errore si los hubo y una data
-      return { error: false, data: 'Update successfully' };
+      return { error: false, data: updateUserData };
     } catch (error) {
       return { error: true, data: error };
     }
@@ -245,28 +256,26 @@ class UserService {
     }
   }
 
-  /* static async recaptcha (body) {
-    if (!body.tokenCaptcha) {
-        return { error: true, data: "reCaptcha token is missing" };
+  /* static async hcaptcha (body) {
+    if (!body.tokenCap) {
+        return { error: true, data: "hCaptcha token is missing" };
     }
-console.log(body.tokenCaptcha);
+console.log(body.tokenCap);
 
     try {
       console.log("entramos al try");
-        const secret = process.env.RECAPTCHA_SECRET_KEY;
-        const googleVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${body.tokenCaptcha}`;
-        const response = await request(googleVerifyUrl);
-        console.log(response, "yo soy el response");
-        const { success } = response.data;
+        const secret = 0xA4D91Cc08cc9f0C6ec4DC75224992aeB5155BB9C;
+        
+        const { success } = await verify(secret, body.tokenCap);
+        console.log("yo soy el response", success);
+       
         if (success) {
-            //hace el register y guarda el user en la base de datos
             return { error: false, data: true };
         } else {
-            return { error: true, data: "Invalid Captcha. Try again." };
+            return { error: true, data: "Invalid Captcha." };
         }
     } catch (e) {
-      console.log("no entramos nunca al try");
-        return { error: true, data: (e, "reCaptcha error.") };
+        return { error: true, data: (e, "reCaptcha error. Try again.") };
     }
 }; */
 
@@ -326,6 +335,27 @@ console.log(body.tokenCaptcha);
         }
       );
       return { error: false, data: 'Token updated successfully' };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async getPendingEvents(userId) {
+    try {
+      const user = await User.findByPk(userId);
+      if (!user) return { error: true, data: 'User does not exist' };
+      const events = await invitationModel.findAll({
+        where: { email: user.email },
+        attributes: [],
+        include: [
+          {
+            model: eventModel,
+            as: 'event',
+            attributes: ['title', 'description', 'date'],
+          },
+        ],
+      });
+      return { error: false, data: events };
     } catch (error) {
       return { error: true, data: error.message };
     }
