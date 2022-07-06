@@ -1,0 +1,23 @@
+ {
+    "development": {
+      "username": null,
+      "password": null,
+      "database": "virtual_events",
+      "host": "localhost",
+      "dialect": "postgres"
+    },
+    "test": {
+      "username": null,
+      "password": null,
+      "database": "database_test",
+      "host": "localhost",
+      "dialect": "postgres"
+    },
+    "production": {
+      "username": null,
+      "password": null,
+      "database": "database_production",
+      "host": "localhost",
+      "dialect": "postgres"
+    }
+  }
