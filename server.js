@@ -12,11 +12,16 @@ const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerJsDocs = YAML.load('./api.yaml');
 
+corsOptions = {
+  origin: ['http://localhost:3000', 'https://virtualeventst3.netlify.app'],
+  credentials: true,
+};
+
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-app.use(morgan('tiny'));
+app.use(cors(corsOptions));
+app.use(morgan('dev'));
 
 app.use('/api', routes);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));

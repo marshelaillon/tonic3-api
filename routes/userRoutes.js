@@ -17,6 +17,8 @@ router.post('/verify-email', userController.verifyEmail);
 router.post('/verify-guest-token', userController.verifyToken);
 router.put('/update-token', userController.updateToken);
 
-router.get('/:id/events', userController.getPendingEvents);
+// EVENTS
+router.get('/events', requireAuth, userController.getEvents);
+router.get('/events/:id', requireAuth, userController.getEventById);
 
 module.exports = router;
