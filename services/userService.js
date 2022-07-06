@@ -20,7 +20,6 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
-
         return { error: true, data: 'Please enter all fields' };
       }
       // Check if user already exists
@@ -29,7 +28,7 @@ class UserService {
       // verificamos que si o si tenga invitacion.
       const invitation = await invitationModel.findOne({ where: { email } });
       if (!invitation)
-        return { error: true, data: "could'nt found your invitation" };
+        return { error: true, data: "Couldn't found your invitation" };
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -184,13 +183,12 @@ class UserService {
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
   static async userUpdate(body, params) {
-  
     const {
       isAdmin,
       userName,
       firstName,
       lastName,
-     // password,
+      // password,
       profilePicture,
       genre,
     } = body;
@@ -206,7 +204,7 @@ class UserService {
         userName,
         firstName,
         lastName,
-       // password: hashedPassword,
+        // password: hashedPassword,
         profilePicture,
         genre,
       });
@@ -225,7 +223,7 @@ class UserService {
         //verificamos si el usuario a liminar existe en caso de q no devolvemos un error
         return { error: true, data: 'user not found' };
       } else {
-        //si el usuario existe lo elimminamos
+        //si el usuario existe lo eliminamos
         await user.destroy();
         return { error: false, data: 'User Deleted' };
       }
@@ -340,22 +338,37 @@ console.log(body.tokenCap);
     }
   }
 
-  static async getPendingEvents(userId) {
+  static async getEvents(email) {
     try {
-      const user = await User.findByPk(userId);
-      if (!user) return { error: true, data: 'User does not exist' };
       const events = await invitationModel.findAll({
-        where: { email: user.email },
+        where: { email },
         attributes: [],
         include: [
           {
             model: eventModel,
             as: 'event',
-            attributes: ['title', 'description', 'date'],
+            attributes: ['title', 'description', 'date', 'id'],
           },
         ],
       });
       return { error: false, data: events };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async getEventById(eventId, userEmail) {
+    try {
+      const isUserAGuest = await invitationModel.findOne({
+        where: { email: userEmail, eventId: eventId },
+      });
+      if (!isUserAGuest) return { error: true, data: 'Not a valid guest' };
+      const event = await eventModel.findByPk(eventId);
+      const timeLeftForEvent = event.getLeftTimeForEvent();
+      return {
+        error: false,
+        data: { eventInfo: event, timeLeftForEvent },
+      };
     } catch (error) {
       return { error: true, data: error.message };
     }
