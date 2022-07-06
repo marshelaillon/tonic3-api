@@ -54,23 +54,22 @@ class adminService {
 
   static async sendInvitations() {
     try {
-
       const { count, rows: guests } = await invitationModel.findAndCountAll({
         where: { send: false },
       });
       if (!guests) return { error: true, data: 'Not guests found' };
 
       guests.map(async (guest, i) => {
-        const event = await eventModel.findByPk(guest.eventId)
+        const event = await eventModel.findByPk(guest.eventId);
         await transporter.sendMail(
           {
             from: 'virtualeventst3@gmail.ar',
             to: guest.email,
             subject: 'Invitation',
             html: `<div style="text-align: center;">
-            <h2>Invitation for ${event.title}!</h2>
+            <h2>Invitation for ${event?.title}!</h2>
             <hr>
-            <h4> Event will take place in ${event.date} </h4>
+            <h4> Event will take place in ${event?.date} </h4>
             <p>We're waiting for you, click on the following link bellow</p>
             <a href="http://localhost:3000/home"> asfdsdfhfdgdjghfkhjkghjlg </a>
             <p>Don't lose the next token, you will need it to access to the event!</p>

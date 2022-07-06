@@ -15,8 +15,14 @@ const swaggerJsDocs = YAML.load('./api.yaml');
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(
+  cors({
+    origin: ['https://virtualeventst3.netlify.app', 'http://localhost:3000'],
+    credentials: true,
+  })
+);
 app.use(morgan('tiny'));
+// app.use(express.static('public'));
 
 app.use('/api', routes);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));

@@ -22,7 +22,8 @@ class UserController {
 
     const token = generateToken(data.id);
     res.cookie('token', token, {
-      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000 * 7,
     });
     res.status(200).json({ data });
@@ -33,6 +34,7 @@ class UserController {
   // @access  Private
   static async logoutUser(req, res) {
     res.cookie('token', '', { maxAge: 1 });
+    console.log(res.cookie('token').cookie());
     res.status(200).send({});
   }
 
