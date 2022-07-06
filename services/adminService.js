@@ -1,7 +1,6 @@
 const { invitationModel, eventModel, userModel } = require('../models');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
-const { findAll } = require('../models/userModel');
 
 class adminService {
   static async addGuest(body) {
@@ -123,6 +122,7 @@ class adminService {
           'assistantsCount',
           'guestsCount',
           'createdAt',
+          'status'
         ],
       });
       if (!count) return { error: true, data: 'Event list is empty' };
@@ -162,6 +162,19 @@ class adminService {
       return { error: true, data: error.message };
     }
   }
+
+  //ELIMINAR EVENTO {maxi}
+  static async removeEvent(paramsId) {
+    console.log(paramsId, "LLEGUE ACA")
+    try {
+      const removedEvent = await eventModel.destroy({ where: { id: paramsId } });
+      if (!removedEvent) return { error: true, data: 'Guest not found' };
+      return { error: false, data: 'Delete complete' };
+    } catch (error) {
+      return { error: true, data: "Delete Incomplete ", error }
+    }
+  }
+
 }
 
 module.exports = adminService;
