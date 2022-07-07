@@ -1,7 +1,5 @@
 const { invitationModel, eventModel, userModel } = require('../models');
-const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
-const { findAll } = require('../models/userModel');
 
 class adminService {
   static async addGuest(body) {
@@ -43,7 +41,9 @@ class adminService {
 
   static async removeGuest(body) {
     try {
-      const removedGuest = await invitationModel.destroy({ where: { id: body } });
+      const removedGuest = await invitationModel.destroy({
+        where: { id: body },
+      });
       if (!removedGuest) return { error: true, data: 'Guest not found' };
       return { error: false, data: 'Delete complete' };
     } catch (error) {
@@ -54,14 +54,13 @@ class adminService {
   static async sendInvitations() {
     console.log("aca estamos ");
     try {
-
       const { count, rows: guests } = await invitationModel.findAndCountAll({
         where: { send: false },
       });
       if (!guests) return { error: true, data: 'Not guests found' };
 
       guests.map(async (guest, i) => {
-        const event = await eventModel.findByPk(guest.eventId)
+        const event = await eventModel.findByPk(guest.eventId);
         await transporter.sendMail(
           {
             from: 'virtualeventst3@gmail.ar',
@@ -124,6 +123,7 @@ class adminService {
           'assistantsCount',
           'guestsCount',
           'createdAt',
+          'status'
         ],
       });
       if (!count) return { error: true, data: 'Event list is empty' };
@@ -142,7 +142,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) { }
+    } catch (error) {}
   }
 
   static async getAllUsers(body) {
@@ -163,6 +163,19 @@ class adminService {
       return { error: true, data: error.message };
     }
   }
+
+  //ELIMINAR EVENTO {maxi}
+  static async removeEvent(paramsId) {
+    console.log(paramsId, "LLEGUE ACA")
+    try {
+      const removedEvent = await eventModel.destroy({ where: { id: paramsId } });
+      if (!removedEvent) return { error: true, data: 'Guest not found' };
+      return { error: false, data: 'Delete complete' };
+    } catch (error) {
+      return { error: true, data: "Delete Incomplete ", error }
+    }
+  }
+
 }
 
 module.exports = adminService;
