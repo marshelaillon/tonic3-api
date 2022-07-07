@@ -52,6 +52,7 @@ class adminService {
   }
 
   static async sendInvitations() {
+    console.log("aca estamos ");
     try {
 
       const { count, rows: guests } = await invitationModel.findAndCountAll({
