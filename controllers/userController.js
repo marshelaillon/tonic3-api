@@ -8,7 +8,6 @@ class UserController {
   // @access  Public
   static async registerUser(req, res) {
     const { error, data } = await UserService.registerUser(req.body);
-    console.log(data);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
   }
@@ -25,6 +24,8 @@ class UserController {
       secure: true,
       sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000 * 7,
+      sameSite: 'none',
+      secure: true,
     });
     res.status(200).json({ data });
   }
@@ -34,7 +35,7 @@ class UserController {
   // @access  Private
   static async logoutUser(req, res) {
     res.cookie('token', '', { maxAge: 1 });
-    console.log(res.cookie('token').cookie());
+    req.user = null;
     res.status(200).send({});
   }
 
@@ -63,7 +64,6 @@ class UserController {
   static async createNewPassword(req, res) {
     const newPassword = req.body.password;
     const { id } = req.params;
-    console.log(newPassword, id);
     const { error, data } = await UserService.createNewPassword(
       newPassword,
       id
@@ -84,12 +84,6 @@ class UserController {
     res.status(200).json(data);
   }
 
-  /*  static async recaptcha (req, res) {
-    const { error, data } = await UserService.recaptcha(req.body)
-    if (error) return res.status(400).json(data);
-    res.status(200).json(data);
-  }
-   */
   // @desc    Remove a new user
   // @route   POST /api/users/register
   // @access  Public & (private¿?)
@@ -124,6 +118,29 @@ class UserController {
     const { error, data } = await UserService.updateToken(req.body);
     if (error) return res.status(400).json({ data });
     res.status(200).json({ data });
+  }
+
+  // @desc    Get all events of a user
+  // @route   GET /api/users/events
+  // @access  private
+  static async getEvents(req, res) {
+    if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
+    const { error, data } = await UserService.getEvents(req.user.email);
+    if (error) return res.status(400).json(data);
+    res.status(200).json(data);
+  }
+
+  // @desc    Get an events of a user
+  // @route   GET /api/users/events/:id
+  // @access  private
+  static async getEventById(req, res) {
+    if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
+    const { error, data } = await UserService.getEventById(
+      req.params.id,
+      req.user.email
+    );
+    if (error) return res.status(400).json(data);
+    res.status(200).json(data);
   }
 }
 

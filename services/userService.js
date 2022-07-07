@@ -3,6 +3,7 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
+//const {verify} = require("hcaptcha")
 //const { request } = require('express');
 
 class UserService {
@@ -19,7 +20,6 @@ class UserService {
         genre,
       } = body;
       if (!userName || !email || !password) {
-        console.log(userName, email, password, 'ESTO ES UN CLGOP');
         return { error: true, data: 'Please enter all fields' };
       }
       // Check if user already exists
@@ -28,7 +28,7 @@ class UserService {
       // verificamos que si o si tenga invitacion.
       const invitation = await invitationModel.findOne({ where: { email } });
       if (!invitation)
-        return { error: true, data: "could'nt found your invitation" };
+        return { error: true, data: "Couldn't found your invitation" };
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -188,7 +188,7 @@ class UserService {
       userName,
       firstName,
       lastName,
-      password,
+      // password,
       profilePicture,
       genre,
     } = body;
@@ -198,18 +198,18 @@ class UserService {
       //si es usuario no existe
       if (!user) return { error: true, data: 'User does not exist' };
       // si el usuario existe le hasheamos el password si lo tiene
-      const hashedPassword = await bcrypt.hash(password, 12);
+      //const hashedPassword = await bcrypt.hash(password, 12);
       // si el ususario existe y con el password hasheado se le aplican los cambios
-      await user.update({
+      const updateUserData = await user.update({
         userName,
         firstName,
         lastName,
-        password: hashedPassword,
+        // password: hashedPassword,
         profilePicture,
         genre,
       });
       // devolvemos errore si los hubo y una data
-      return { error: false, data: 'Update successfully' };
+      return { error: false, data: updateUserData };
     } catch (error) {
       return { error: true, data: error };
     }
@@ -223,7 +223,7 @@ class UserService {
         //verificamos si el usuario a liminar existe en caso de q no devolvemos un error
         return { error: true, data: 'user not found' };
       } else {
-        //si el usuario existe lo elimminamos
+        //si el usuario existe lo eliminamos
         await user.destroy();
         return { error: false, data: 'User Deleted' };
       }
@@ -254,28 +254,26 @@ class UserService {
     }
   }
 
-  /* static async recaptcha (body) {
-    if (!body.tokenCaptcha) {
-        return { error: true, data: "reCaptcha token is missing" };
+  /* static async hcaptcha (body) {
+    if (!body.tokenCap) {
+        return { error: true, data: "hCaptcha token is missing" };
     }
-console.log(body.tokenCaptcha);
+console.log(body.tokenCap);
 
     try {
       console.log("entramos al try");
-        const secret = process.env.RECAPTCHA_SECRET_KEY;
-        const googleVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${body.tokenCaptcha}`;
-        const response = await request(googleVerifyUrl);
-        console.log(response, "yo soy el response");
-        const { success } = response.data;
+        const secret = 0xA4D91Cc08cc9f0C6ec4DC75224992aeB5155BB9C;
+        
+        const { success } = await verify(secret, body.tokenCap);
+        console.log("yo soy el response", success);
+       
         if (success) {
-            //hace el register y guarda el user en la base de datos
             return { error: false, data: true };
         } else {
-            return { error: true, data: "Invalid Captcha. Try again." };
+            return { error: true, data: "Invalid Captcha." };
         }
     } catch (e) {
-      console.log("no entramos nunca al try");
-        return { error: true, data: (e, "reCaptcha error.") };
+        return { error: true, data: (e, "reCaptcha error. Try again.") };
     }
 }; */
 
@@ -295,7 +293,6 @@ console.log(body.tokenCaptcha);
 
   static async verifyToken(body) {
     const { email, token } = body;
-    console.log('email', email, 'token', token);
     try {
       const verifiedGuest = await invitationModel.findOne({
         where: { email: email },
@@ -336,6 +333,42 @@ console.log(body.tokenCaptcha);
         }
       );
       return { error: false, data: 'Token updated successfully' };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async getEvents(email) {
+    try {
+      const events = await invitationModel.findAll({
+        where: { email },
+        attributes: [],
+        include: [
+          {
+            model: eventModel,
+            as: 'event',
+            attributes: ['title', 'description', 'date', 'id'],
+          },
+        ],
+      });
+      return { error: false, data: events };
+    } catch (error) {
+      return { error: true, data: error.message };
+    }
+  }
+
+  static async getEventById(eventId, userEmail) {
+    try {
+      const isUserAGuest = await invitationModel.findOne({
+        where: { email: userEmail, eventId: eventId },
+      });
+      if (!isUserAGuest) return { error: true, data: 'Not a valid guest' };
+      const event = await eventModel.findByPk(eventId);
+      const timeLeftForEvent = event.getLeftTimeForEvent();
+      return {
+        error: false,
+        data: { eventInfo: event, timeLeftForEvent },
+      };
     } catch (error) {
       return { error: true, data: error.message };
     }

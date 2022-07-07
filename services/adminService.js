@@ -1,7 +1,5 @@
 const { invitationModel, eventModel, userModel } = require('../models');
-const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
-const { findAll } = require('../models/userModel');
 
 class adminService {
   static async addGuest(body) {
@@ -43,8 +41,9 @@ class adminService {
 
   static async removeGuest(body) {
     try {
-      const { id } = body;
-      const removedGuest = await invitationModel.destroy({ where: { id } });
+      const removedGuest = await invitationModel.destroy({
+        where: { id: body },
+      });
       if (!removedGuest) return { error: true, data: 'Guest not found' };
       return { error: false, data: 'Delete complete' };
     } catch (error) {
@@ -99,12 +98,15 @@ class adminService {
 
   static async addEvent(body) {
     try {
-      const { title, url, description } = body;
-      if (!title || !url || !description)
+      const { title, url, description, date } = body;
+      if (!title || !url || !description || !date)
         return { error: true, data: 'All fields are required' };
       const event = await eventModel.create(body);
-      if (!event) return { error: true, data: 'cannot create event' };
+      if (!event) return { error: true, data: 'Cannot create event' };
       //cambien la data de event{maxi}
+      // ! MOSTRAR A LES MUCHACHES xd
+      console.log('Fecha del evento en mi zona horaria', event.getLocalDate());
+      console.log('Tiempo restante:', event.getLeftTimeForEvent());
       return { error: false, data: event };
     } catch (error) {
       return { error: true, data: error };
@@ -120,6 +122,7 @@ class adminService {
           'assistantsCount',
           'guestsCount',
           'createdAt',
+          'status'
         ],
       });
       if (!count) return { error: true, data: 'Event list is empty' };
@@ -159,6 +162,19 @@ class adminService {
       return { error: true, data: error.message };
     }
   }
+
+  //ELIMINAR EVENTO {maxi}
+  static async removeEvent(paramsId) {
+    console.log(paramsId, "LLEGUE ACA")
+    try {
+      const removedEvent = await eventModel.destroy({ where: { id: paramsId } });
+      if (!removedEvent) return { error: true, data: 'Guest not found' };
+      return { error: false, data: 'Delete complete' };
+    } catch (error) {
+      return { error: true, data: "Delete Incomplete ", error }
+    }
+  }
+
 }
 
 module.exports = adminService;
