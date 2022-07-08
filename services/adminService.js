@@ -66,9 +66,9 @@ class adminService {
             to: guest.email,
             subject: 'Invitation',
             html: `<div style="text-align: center;">
-            <h2>Invitation for ${event.title}!</h2>
+            <h2>Invitation for ${event?.title}!</h2>
             <hr>
-            <h4> Event will take place in ${event.date} </h4>
+            <h4> Event will take place in ${event?.date} </h4>
             <p>We're waiting for you, click on the following link bellow</p>
             <a href="http://localhost:3000/home"> asfdsdfhfdgdjghfkhjkghjlg </a>
             <p>Don't lose the next token, you will need it to access to the event!</p>
