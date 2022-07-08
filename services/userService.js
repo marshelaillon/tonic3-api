@@ -283,7 +283,6 @@ console.log(body.tokenCap);
       const guest = await invitationModel.findOne({
         where: { email },
       });
-
       if (!guest) return { error: true, data: { verified: false } };
       return { error: false, data: { verified: true, checked: guest.checked } };
     } catch (error) {
