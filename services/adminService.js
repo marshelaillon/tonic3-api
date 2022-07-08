@@ -121,8 +121,8 @@ class adminService {
           'title',
           'assistantsCount',
           'guestsCount',
-          'createdAt',
-          'status'
+          'date',
+          'status',
         ],
       });
       if (!count) return { error: true, data: 'Event list is empty' };
@@ -165,16 +165,17 @@ class adminService {
 
   //ELIMINAR EVENTO {maxi}
   static async removeEvent(paramsId) {
-    console.log(paramsId, "LLEGUE ACA")
+    console.log(paramsId, 'LLEGUE ACA');
     try {
-      const removedEvent = await eventModel.destroy({ where: { id: paramsId } });
+      const removedEvent = await eventModel.destroy({
+        where: { id: paramsId },
+      });
       if (!removedEvent) return { error: true, data: 'Guest not found' };
       return { error: false, data: 'Delete complete' };
     } catch (error) {
-      return { error: true, data: "Delete Incomplete ", error }
+      return { error: true, data: 'Delete Incomplete ', error };
     }
   }
-
 }
 
 module.exports = adminService;

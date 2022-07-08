@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const S = require('sequelize');
 const db = require('../db');
 
-class Invitation extends S.Model { }
+class Invitation extends S.Model {}
 
 Invitation.init(
   {
@@ -44,6 +44,8 @@ Invitation.prototype.updateToken = async function () {
     const randomString = Math.random().toString(36);
     const accessCode = (await bcrypt.hash(randomString, 2)).slice(0, 20);
     this.accessCode = accessCode;
+    console.log('este es el nuevo acces  code', this.accessCode);
+    this.save();
     return accessCode;
   } catch (error) {
     return error;
