@@ -21,14 +21,14 @@ class UserController {
 
     const token = generateToken(data.id);
     console.log(token);
-    res.cookie('token', token, {
+    /*     res.cookie('token', token, {
       secure: true,
       sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000 * 7,
       sameSite: 'none',
       secure: true,
-    });
-    res.status(200).json({ data });
+    }); */
+    res.status(200).json({ ...data, token });
   }
 
   // @desc    Logout user
@@ -36,9 +36,8 @@ class UserController {
   // @access  Private
   static async logoutUser(req, res) {
     //res.cookie('token', '', { maxAge: 1 });
-    res.clearCookie('token');
     req.user = null;
-    res.status(200).send({});
+    res.status(200).send({ message: 'Logout successful' });
   }
 
   // @desc    Persist user session
