@@ -339,7 +339,7 @@ console.log(body.tokenCap);
 
   static async getEvents(email) {
     try {
-      const events = await invitationModel.findAll({
+      const invitations = await invitationModel.findAll({
         where: { email },
         attributes: [],
         include: [
@@ -350,7 +350,17 @@ console.log(body.tokenCap);
           },
         ],
       });
-      return { error: false, data: events };
+      if (!invitations.length) return { error: true, data: 'guests not found' };
+      const sortedEvents = invitations
+        .map(item => item.dataValues.event.dataValues)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      const event = await eventModel.findByPk(sortedEvents[0].id);
+      if (!event) return { error: true, data: 'Events not found' };
+
+      const leftTime = event.getLeftTimeForEvent();
+
+      return { error: false, data: { events: sortedEvents, leftTime } };
     } catch (error) {
       return { error: true, data: error.message };
     }

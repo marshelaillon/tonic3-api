@@ -94,9 +94,12 @@ Event.addHook('beforeCreate', event => {
   if (new Date(event.date) < new Date()) {
     throw new Error('The date cannot be in the past');
   } else {
-    console.log(event.date);
     event.date = new Date(event.date).toISOString();
   }
+  // } else {
+  //   console.log(event.date);
+  //   event.date = new Date(event.date).toISOString();
+  // }
 });
 
 Event.prototype.increaseGuestCount = function () {
