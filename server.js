@@ -6,7 +6,7 @@ const routes = require('./routes');
 const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
-const PORT = process.env.PORT || 5432;
+const PORT = process.env.PORT || 3001;
 const models = require('./models');
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -20,15 +20,6 @@ corsOptions = {
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: ['https://virtualeventst3.netlify.app', 'http://localhost:3000'],
-    credentials: true,
-  })
-);
-app.use(morgan('tiny'));
-// app.use(express.static('public'));
-
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 
