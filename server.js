@@ -6,7 +6,7 @@ const routes = require('./routes');
 const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5432;
 const models = require('./models');
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -38,10 +38,10 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 (async () => {
   try {
     await db.sync({ force: false });
-    app.listen(3001, () => {
+    app.listen(5432, () => {
       console.log(`server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.log('Unable to connect to the database', error.message);
+    console.log('Unable to connect:', error.message);
   }
 })();
