@@ -102,9 +102,10 @@ class adminService {
   static async addEvent(body) {
     try {
       const { title, url, description, date } = body;
+
       if (!title || !url || !description || !date)
         return { error: true, data: 'All fields are required' };
-      const event = await eventModel.create(body);
+        const event = await eventModel.create(body);
       if (!event) return { error: true, data: 'Cannot create event' };
       //cambien la data de event{maxi}
       // ! MOSTRAR A LES MUCHACHES xd

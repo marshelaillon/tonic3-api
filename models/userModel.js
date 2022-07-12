@@ -41,7 +41,7 @@ User.init(
     },
   
     profilePicture: {
-      type: S.STRING,
+      type: S.TEXT,
       defaultValue:
         'https://www.pngitem.com/pimgs/m/24-248366_profile-clipart-generic-user-generic-profile-picture-gender.png',
     },
