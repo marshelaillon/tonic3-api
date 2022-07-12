@@ -1,23 +1,23 @@
- {
-    "development": {
-      "username": null,
-      "password": null,
-      "database": "virtual_events",
-      "host": "localhost",
-      "dialect": "postgres"
-    },
-    "test": {
-      "username": null,
-      "password": null,
-      "database": "database_test",
-      "host": "localhost",
-      "dialect": "postgres"
-    },
-    "production": {
-      "username": null,
-      "password": null,
-      "database": "database_production",
-      "host": "localhost",
-      "dialect": "postgres"
-    }
+{
+  "development": {
+    "username": null,
+    "password": null,
+    "database": "virtual_events",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": null,
+    "password": null,
+    "database": "database_test",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "bwlmjybmuqnlve",
+    "password": "d1d24e4faacb0d3359bab3ad31fb3ca06c60f1e2f89bc075eca523f7d6d0abd4",
+    "database": "d6nimcqboqdga5",
+    "host": "ec2-54-160-109-68.compute-1.amazonaws.com",
+    "dialect": "postgres"
   }
+}

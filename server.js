@@ -20,15 +20,6 @@ corsOptions = {
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: ['https://virtualeventst3.netlify.app', 'http://localhost:3000'],
-    credentials: true,
-  })
-);
-app.use(morgan('tiny'));
-// app.use(express.static('public'));
-
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 
@@ -38,10 +29,10 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 (async () => {
   try {
     await db.sync({ force: false });
-    app.listen(3001, () => {
+    app.listen(PORT, () => {
       console.log(`server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.log('Unable to connect to the database', error.message);
+    console.log('Unable to connect:', error.message);
   }
 })();
