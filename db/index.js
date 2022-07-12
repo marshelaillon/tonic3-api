@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
 
 if (process.env.NODE_ENV === 'production') {
   db = new Sequelize(
-    'postgres://bwlmjybmuqnlve:d1d24e4faacb0d3359bab3ad31fb3ca06c60f1e2f89bc075eca523f7d6d0abd4@ec2-54-160-109-68.compute-1.amazonaws.com:5432/d6nimcqboqdga5',
+    'postgresql-octagonal-31034',
     'bwlmjybmuqnlve',
     'd1d24e4faacb0d3359bab3ad31fb3ca06c60f1e2f89bc075eca523f7d6d0abd4',
     {
