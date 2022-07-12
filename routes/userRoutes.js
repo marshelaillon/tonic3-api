@@ -2,7 +2,7 @@ const router = require('express').Router();
 const userController = require('../controllers/userController');
 const requireAuth = require('../middlewares/requireAuth');
 
-router.post('/logout', requireAuth, userController.logoutUser);
+router.get('/logout', requireAuth, userController.logoutUser);
 router.get('/getMe', requireAuth, userController.getMe);
 router.get('/admin/user', requireAuth, userController.getUsers);
 router.post('/register', userController.registerUser);
