@@ -10,7 +10,7 @@ class adminController {
   }
 
   static async removeGuest(req, res) {
-    console.log(req.body)
+    console.log(req.body);
     // if (req.user.isAdmin) {
     const { error, data } = await adminService.removeGuest(req.params.id);
     if (error) return res.status(400).json({ data });
@@ -82,13 +82,20 @@ class adminController {
   }
 
   static async removeEvent(req, res) {
-    const { error, data } = await adminService.removeEvent(req.params.id)
+    const { error, data } = await adminService.removeEvent(req.params.id);
+    if (error) {
+      return res.status(400).json({ data });
+    }
+    res.status(200).json({ data });
+  }
+
+  static async editUser(req, res) {
+    const { error, data } = await adminService.editUser(req.params.id);
     if (error) {
       return res.status(400).json({ data })
     }
     res.status(200).json({ data })
   }
-
 }
 
 module.exports = adminController;
