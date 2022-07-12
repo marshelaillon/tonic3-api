@@ -18,6 +18,9 @@ if (process.env.NODE_ENV === 'production') {
       dialect: 'postgres',
       host: 'ec2-54-160-109-68.compute-1.amazonaws.com',
       logging: false,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }
   );
 }
