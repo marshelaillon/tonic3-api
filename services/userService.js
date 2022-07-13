@@ -220,7 +220,7 @@ class UserService {
       //buscamos el usuario a eliminar
       const user = await User.findByPk(params);
       if (!user) {
-        //verificamos si el usuario a liminar existe en caso de q no devolvemos un error
+        //verificamos si el usuario a eliminar existe en caso de q no devolvemos un error
         return { error: true, data: 'user not found' };
       } else {
         //si el usuario existe lo eliminamos
