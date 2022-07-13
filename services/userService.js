@@ -149,9 +149,9 @@ class UserService {
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
         expiresIn: '10m',
       });
-      const verificationLink = `http://localhost:3000/new-password/${user.id}/${token}`;
+      const verificationLink = `http://localhost:3000/#/new-password/${user.id}/${token}`;
       await transporter.sendMail({
-        from: 'virtualevents@gmail.ar',
+        from: 'virtualevents@gmail.com',
         to: user.email,
         subject: 'NEW PASSWORD!',
         html: `<div>
