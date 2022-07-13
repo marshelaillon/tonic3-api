@@ -1,9 +1,10 @@
 const { invitationModel, eventModel, userModel } = require('../models');
+const { use } = require('../utils/nodemailConfig');
 const transporter = require('../utils/nodemailConfig');
 
 class adminService {
   static async addGuest(body) {
-    console.log("igualk esto lo venmos en la terminal", body)
+    console.log('igualk esto lo venmos en la terminal', body);
 
     try {
       const { emails, eventId } = body;
@@ -54,7 +55,7 @@ class adminService {
   }
 
   static async sendInvitations() {
-    console.log("aca estamos ");
+    console.log('aca estamos ');
     try {
       const { count, rows: guests } = await invitationModel.findAndCountAll({
         where: { send: false },
@@ -105,7 +106,7 @@ class adminService {
 
       if (!title || !url || !description || !date)
         return { error: true, data: 'All fields are required' };
-        const event = await eventModel.create(body);
+      const event = await eventModel.create(body);
       if (!event) return { error: true, data: 'Cannot create event' };
       //cambien la data de event{maxi}
       // ! MOSTRAR A LES MUCHACHES xd
@@ -128,7 +129,7 @@ class adminService {
           'date',
           'status',
           'url',
-          'description'
+          'description',
         ],
       });
       if (!count) return { error: true, data: 'Event list is empty' };
@@ -169,7 +170,6 @@ class adminService {
     }
   }
 
-  //ELIMINAR EVENTO {maxi}
   static async removeEvent(paramsId) {
     try {
       const removedEvent = await eventModel.destroy({
@@ -183,13 +183,24 @@ class adminService {
   }
 
   static async editUser(paramsId) {
+    console.log(paramsId)
     try {
-      const user = await userModel.findByPk(paramsId)
-    } catch (error) {
+      const user = await userModel.findByPk(paramsId);
+      console.log('LLEGUE ACA ', user.isAdmin);
 
+      if (user.isAdmin) {
+        console.log('llegue');
+        user.update({ isAdmin: false });
+      } else {
+        user.update({ isAdmin: true });
+      }
+      console.log("LLEGUE ACA ", user.isAdmin)
+
+      return { error: false, data: 'Update successfully' };
+    } catch (error) {
+      return { error: true, data: error };
     }
   }
-
 }
 
 module.exports = adminService;
