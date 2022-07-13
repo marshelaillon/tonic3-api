@@ -133,6 +133,8 @@ components:
           items:
             type: string
             format: email
+        eventId: 
+          type: int
             
   securitySchemes:
       bearerAuth:
