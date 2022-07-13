@@ -3,6 +3,8 @@ const transporter = require('../utils/nodemailConfig');
 
 class adminService {
   static async addGuest(body) {
+    console.log("igualk esto lo venmos en la terminal", body)
+
     try {
       const { emails, eventId } = body;
       if (!emails) return { error: true, data: 'Please enter all fields' };
@@ -52,6 +54,7 @@ class adminService {
   }
 
   static async sendInvitations() {
+    console.log("aca estamos ");
     try {
       const { count, rows: guests } = await invitationModel.findAndCountAll({
         where: { send: false },
@@ -99,9 +102,10 @@ class adminService {
   static async addEvent(body) {
     try {
       const { title, url, description, date } = body;
+
       if (!title || !url || !description || !date)
         return { error: true, data: 'All fields are required' };
-      const event = await eventModel.create(body);
+        const event = await eventModel.create(body);
       if (!event) return { error: true, data: 'Cannot create event' };
       //cambien la data de event{maxi}
       // ! MOSTRAR A LES MUCHACHES xd
@@ -123,6 +127,8 @@ class adminService {
           'guestsCount',
           'date',
           'status',
+          'url',
+          'description'
         ],
       });
       if (!count) return { error: true, data: 'Event list is empty' };
@@ -141,7 +147,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) {}
+    } catch (error) { }
   }
 
   static async getAllUsers(body) {
@@ -165,7 +171,6 @@ class adminService {
 
   //ELIMINAR EVENTO {maxi}
   static async removeEvent(paramsId) {
-    console.log(paramsId, 'LLEGUE ACA');
     try {
       const removedEvent = await eventModel.destroy({
         where: { id: paramsId },
@@ -176,6 +181,15 @@ class adminService {
       return { error: true, data: 'Delete Incomplete ', error };
     }
   }
+
+  static async editUser(paramsId) {
+    try {
+      const user = await userModel.findByPk(paramsId)
+    } catch (error) {
+
+    }
+  }
+
 }
 
 module.exports = adminService;
