@@ -46,7 +46,7 @@ paths:
         400:
           description: Bad request
           content: {}
-  /user/logout:
+  /users/logout:
     get:
       tags:
         - user
@@ -55,8 +55,13 @@ paths:
         200:
           description: Logout successfully
           content: {}
-  /user/getMe:
+  /users/getMe:
     get:
+      security: [
+            {
+                "bearerAuth": []
+            }
+          ]
       tags:
         - user
       summary: Returns logged in user information
@@ -70,23 +75,30 @@ paths:
         403:
           description: Not authorized
           content: {}
-      security:
-        - getMe_auth:
-            - read: user
-  /guests/add-guest:
+  /admin/add-guest:
     post:
+      security: [
+           {
+              "bearerAuth": []
+           }
+        ]
       tags:
-        - guest
-      summary: add new guest on Invitations table
-      requestBody: strings's array whit guest's email.
-        description: The route check if email is on db, else added it
+        - admin
+      summary: add new guest on invitations table
+      requestBody: array of strings with guests emails
+        description: Adds a new guest
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Guest'
         required: true
       responses: 
         200:
           description: the guests was created successfully
-          content: {}
         400: 
           description: Bad request
+        401:
+          description: Access token is missing or invalid
 components:
   schemas:
     User:
@@ -113,3 +125,18 @@ components:
         password:
           type: string
           len: [8, 16]
+    Guest:
+      type: object
+      properties: 
+        emails:
+          type: array
+          items:
+            type: string
+            format: email
+            
+  securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+        in: header
