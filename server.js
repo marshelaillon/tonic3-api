@@ -33,6 +33,6 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
       console.log(`server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.log('Unable to connect:', error.message);
+    console.error('Unable to connect:', error.message);
   }
 })();
