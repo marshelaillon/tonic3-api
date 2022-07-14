@@ -289,8 +289,33 @@ paths:
           description: Returns logged in user info except for the password
         401:
           description: Not authorized
-  /users/update/{userId}:
-  /user/remove/{userId}:
+  /users/update:
+    put:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - user
+      summary: Updates user information
+      requestBody:
+        description: Updated user object
+        required: true
+      responses:
+        200:
+          description: User was updated successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /user/remove:
+    delete:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - user
+      summary: Removes user from the system
+      responses:
+        200:
+          description: User was removed successfully
+        401:
+          description: Unauthorized
 
 components:
   schemas:

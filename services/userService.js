@@ -180,7 +180,6 @@ class UserService {
     try {
       const user = await User.findByPk(id);
       if (!user) return { error: true, data: 'User not found' };
-      // make new password matches the expression regular /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
       if (
         newPassword &&
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
@@ -201,7 +200,7 @@ class UserService {
     }
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
-  static async userUpdate(body, params) {
+  static async userUpdate(body) {
     const {
       isAdmin,
       userName,
@@ -213,7 +212,7 @@ class UserService {
     } = body;
     try {
       // verifico si el usuario existe
-      const user = await User.findByPk(params);
+      const user = await User.findByPk(req.user.id);
       //si es usuario no existe
       if (!user) return { error: true, data: 'User does not exist' };
       // si el usuario existe le hasheamos el password si lo tiene
@@ -227,25 +226,28 @@ class UserService {
         profilePicture,
         genre,
       });
-      // devolvemos errore si los hubo y una data
+      // devolvemos error si los hubo y una data
       return { error: false, data: updateUserData };
     } catch (error) {
       return { error: true, data: error };
     }
   }
 
-  static async removeUser(params) {
+  static async removeUser() {
     try {
       //buscamos el usuario a eliminar
-      const user = await User.findByPk(params);
+      const user = await User.findByPk(req.user.id);
       if (!user) {
         //verificamos si el usuario a eliminar existe en caso de q no devolvemos un error
-        return { error: true, data: 'user not found' };
+        return { error: true, data: 'User not found' };
       } else {
         //si el usuario existe lo eliminamos
-        await user.destroy();
-        return { error: false, data: 'User Deleted' };
+        const isRemoved = await user.destroy();
+        if (isRemoved) {
+          return { error: false, data: 'User deleted' };
+        }
       }
+      return { error: true, data: 'Something went wrong!' };
     } catch (error) {
       return { error: true, data: 'server problems' };
     }
@@ -362,10 +364,10 @@ console.log(body.tokenCap);
     }
   }
 
-  static async getEvents(email) {
+  static async getEvents() {
     try {
       const invitations = await invitationModel.findAll({
-        where: { email },
+        where: { email: req.user.email },
         attributes: [],
         include: [
           {

@@ -65,23 +65,21 @@ class UserController {
     res.status(200).json(data);
   }
 
-  // @desc    Register a new user
-  // @route   POST /api/users/register
-  // @access  Public
+  // @desc    Update the user's information
+  // @route   POST /api/users/update
+  // @access  Private
   static async userUpdate(req, res) {
-    const { error, data } = await UserService.userUpdate(
-      req.body,
-      req.params.id
-    );
+    const { error, data } = await UserService.userUpdate(req.body);
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
 
   // @desc    Remove a new user
   // @route   POST /api/users/register
-  // @access  Public & (private¿?)
+  // @access  Private
   static async removeUser(req, res) {
-    const { error, data } = await UserService.removeUser(req.params.id);
+    if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
+    const { error, data } = await UserService.removeUser();
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
@@ -109,7 +107,7 @@ class UserController {
   // @access  private
   static async getEvents(req, res) {
     if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
-    const { error, data } = await UserService.getEvents(req.user.email);
+    const { error, data } = await UserService.getEvents();
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
