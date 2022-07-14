@@ -24,9 +24,9 @@ class UserService {
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
       // verificamos que si o si tenga invitacion.
-      //const invitation = await invitationModel.findOne({ where: { email } });
-      /* if (!invitation)
-        return { error: true, data: "Couldn't found your invitation" }; */
+      const invitation = await invitationModel.findOne({ where: { email } });
+      if (!invitation)
+        return { error: true, data: "Couldn't found your invitation" };
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -40,7 +40,7 @@ class UserService {
         isAdmin,
       });
 
-      /* if (newUser) {
+      if (newUser) {
         newUser.setInvitation(invitation);
         const updatedGuest = await invitationModel.update(
           { checked: true },
@@ -64,9 +64,9 @@ class UserService {
               };
             }
           }
-        ); */
-      return { error: false, data: 'Register successfully' };
-      /* } */
+        );
+        return { error: false, data: 'Register successfully' };
+      }
     } catch (error) {
       return { error: true, data: error.message };
     }

@@ -17,17 +17,9 @@ class UserController {
   // @access  Public
   static async loginUser(req, res) {
     const { error, data } = await UserService.loginUser(req.body);
-    console.log("data del back...!!!!",{data});
     if (error) return res.sendStatus(400);
 
     const token = generateToken(data.id);
-    /*     res.cookie('token', token, {
-      secure: true,
-      sameSite: 'none',
-      maxAge: 24 * 60 * 60 * 1000 * 7,
-      sameSite: 'none',
-      secure: true,
-    }); */
     res.status(200).json({ ...data, token });
   }
 
