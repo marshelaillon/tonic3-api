@@ -43,6 +43,7 @@ Invitation.prototype.setSend = function () {
 Invitation.prototype.updateToken = async function () {
   try {
     const randomString = Math.random().toString(36);
+    console.log("este es el randomString");
     const accessCode = (await bcrypt.hash(randomString, 2)).slice(0, 20);
     this.accessCode = accessCode;
     console.log('este es el nuevo access code', this.accessCode);
