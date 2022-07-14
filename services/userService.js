@@ -65,8 +65,8 @@ class UserService {
             }
           }
         ); */
-        return { error: false, data: 'Register successfully' };
-      }
+      return { error: false, data: 'Register successfully' };
+      /* } */
     } catch (error) {
       return { error: true, data: error.message };
     }
