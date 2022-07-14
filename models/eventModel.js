@@ -69,6 +69,9 @@ Event.init(
         return this.getDataValue('description').substring(0, 190);
       },
     },
+    image: {
+      type: S.TEXT,
+    },
     assistantsCount: {
       type: S.INTEGER,
       defaultValue: 0,

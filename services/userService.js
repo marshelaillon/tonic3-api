@@ -182,14 +182,15 @@ class UserService {
     }
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
-  static async userUpdate(body, params) {
+  static async userUpdate(body, file, params) {
+    console.log('ESTO ES EL FILE DE SERVICE', file);
+    // console.log(body.profilePicture);
     const {
       isAdmin,
       userName,
       firstName,
       lastName,
       // password,
-      profilePicture,
       genre,
     } = body;
     try {
@@ -205,7 +206,7 @@ class UserService {
         firstName,
         lastName,
         // password: hashedPassword,
-        profilePicture,
+        profilePicture: file.path,
         genre,
       });
       // devolvemos errore si los hubo y una data
@@ -346,7 +347,7 @@ console.log(body.tokenCap);
           {
             model: eventModel,
             as: 'event',
-            attributes: ['title', 'description', 'date', 'id'],
+            attributes: ['title', 'description', 'date', 'id', 'image'],
           },
         ],
       });

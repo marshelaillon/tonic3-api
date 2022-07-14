@@ -18,12 +18,14 @@ corsOptions = {
 };
 
 // middlewares
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 
 app.use('/api', routes);
+app.use('/static/images', express.static('./static/images'));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 
 (async () => {

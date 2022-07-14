@@ -100,13 +100,17 @@ class adminService {
     }
   }
 
-  static async addEvent(body) {
+  static async addEvent(body, file) {
     try {
+      console.log('FILE DEL ADD EVENT', file);
       const { title, url, description, date } = body;
 
-      if (!title || !url || !description || !date)
+      if (!title || !url || !description || !date) {
+        console.log('entre al primer if');
         return { error: true, data: 'All fields are required' };
-      const event = await eventModel.create(body);
+      }
+      const event = await eventModel.create({ ...body, image: file.path });
+      console.log('pase el primer if y soy el event', event);
       if (!event) return { error: true, data: 'Cannot create event' };
       //cambien la data de event{maxi}
       // ! MOSTRAR A LES MUCHACHES xd
@@ -148,7 +152,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) { }
+    } catch (error) {}
   }
 
   static async getAllUsers(body) {
@@ -183,7 +187,7 @@ class adminService {
   }
 
   static async editUser(paramsId) {
-    console.log(paramsId)
+    console.log(paramsId);
     try {
       const user = await userModel.findByPk(paramsId);
       console.log('LLEGUE ACA ', user.isAdmin);
@@ -194,7 +198,7 @@ class adminService {
       } else {
         user.update({ isAdmin: true });
       }
-      console.log("LLEGUE ACA ", user.isAdmin)
+      console.log('LLEGUE ACA ', user.isAdmin);
 
       return { error: false, data: 'Update successfully' };
     } catch (error) {
