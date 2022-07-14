@@ -62,7 +62,7 @@ class UserController {
       id
     );
     if (error) return res.status(400).json({ data });
-    res.status(200).json({ data });
+    res.status(200).json(data);
   }
 
   // @desc    Register a new user
@@ -83,15 +83,6 @@ class UserController {
   static async removeUser(req, res) {
     const { error, data } = await UserService.removeUser(req.params.id);
     if (error) return res.status(400).json(data);
-    res.status(200).json(data);
-  }
-
-  // @desc    Get all users
-  // @route   POST /api/users/register
-  // @access  private
-  static async getUsers(req, res) {
-    const { error, data } = await UserService.getUsers(req.user);
-    if (error) return res.status(401).json(data);
     res.status(200).json(data);
   }
 

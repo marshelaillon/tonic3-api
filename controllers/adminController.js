@@ -92,8 +92,8 @@ class adminController {
     if (req.user.isAdmin) {
       const { error, data } = await adminService.editUser(req.params.id);
       if (error) return res.status(400).json({ data });
-      res.status(204).json({ data });
-    } else res.status(403).json({ data: 'Unauthorized user' });
+      res.status(200).json(data);
+    } else res.status(401).json({ data: 'Unauthorized user' });
   }
 }
 
