@@ -1,7 +1,7 @@
 const S = require('sequelize');
 const db = require('../db');
 
-class User extends S.Model { }
+class User extends S.Model {}
 
 User.init(
   {
@@ -39,7 +39,6 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-  
     profilePicture: {
       type: S.TEXT,
       defaultValue:
@@ -47,10 +46,8 @@ User.init(
     },
     genre: {
       type: S.STRING,
-
-    }, 
+    },
   },
-
   { sequelize: db, modelName: 'users' }
 );
 

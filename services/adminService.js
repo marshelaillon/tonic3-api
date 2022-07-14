@@ -4,11 +4,9 @@ const transporter = require('../utils/nodemailConfig');
 
 class adminService {
   static async addGuest(body) {
-    console.log('igualk esto lo venmos en la terminal', body);
-
     try {
       const { emails, eventId } = body;
-      if (!emails) return { error: true, data: 'Please enter all fields' };
+      if (!emails) return { error: true, data: 'Please enter guests emails' };
 
       emails.forEach(async email => {
         const [invitation, create] = await invitationModel.findOrCreate({
@@ -24,7 +22,7 @@ class adminService {
         }
       });
 
-      return { error: false, data: 'the guests was created successfully' };
+      return { error: false, data: 'Guests added successfully' };
     } catch (error) {
       return { error: true, data: error.message };
     }
@@ -55,7 +53,6 @@ class adminService {
   }
 
   static async sendInvitations() {
-    console.log('aca estamos ');
     try {
       const { count, rows: guests } = await invitationModel.findAndCountAll({
         where: { send: false },
@@ -148,7 +145,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) { }
+    } catch (error) {}
   }
 
   static async getAllUsers(body) {
@@ -183,7 +180,7 @@ class adminService {
   }
 
   static async editUser(paramsId) {
-    console.log(paramsId)
+    console.log(paramsId);
     try {
       const user = await userModel.findByPk(paramsId);
       console.log('LLEGUE ACA ', user.isAdmin);
@@ -194,7 +191,7 @@ class adminService {
       } else {
         user.update({ isAdmin: true });
       }
-      console.log("LLEGUE ACA ", user.isAdmin)
+      console.log('LLEGUE ACA ', user.isAdmin);
 
       return { error: false, data: 'Update successfully' };
     } catch (error) {

@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
   db = new Sequelize(process.env.DATABASE_URL, {
     dialectOptions: {
       ssl: {
-        rejectUnauthorized: false,
+        rejectUnauthorized: false, // averiguar
       },
     },
   });

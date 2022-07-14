@@ -3,8 +3,6 @@ const { invitationModel, eventModel } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/nodemailConfig');
-//const {verify} = require("hcaptcha")
-//const { request } = require('express');
 
 class UserService {
   static async registerUser(body) {
@@ -26,9 +24,9 @@ class UserService {
       const user = await User.findOne({ where: { email } });
       if (user) return { error: true, data: 'User already exists' };
       // verificamos que si o si tenga invitacion.
-      const invitation = await invitationModel.findOne({ where: { email } });
-      if (!invitation)
-        return { error: true, data: "Couldn't found your invitation" };
+      //const invitation = await invitationModel.findOne({ where: { email } });
+      /* if (!invitation)
+        return { error: true, data: "Couldn't found your invitation" }; */
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
 

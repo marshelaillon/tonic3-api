@@ -10,7 +10,50 @@ info:
     email: virutaleventsteam@gmail.com
 servers:
   - url: http://localhost:3001/api
+    description: development server
+  - url: https://virtual-events-t3.herokuapp.com/api
+    description: production server
 paths:
+  /admin/add-event:
+    post:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Adds new event to the events table
+      requestBody:
+        description: Created event object
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        200:
+          description: the event was created successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /admin/add-guest:
+    post:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Adds new guest on invitations table
+      requestBody:
+        description: array of strings with guests emails and event id
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Guest'
+        required: true
+      responses:
+        200:
+          description: the guests was created successfully
+        400:
+          description: Bad request
+        401:
+          description: Access token is missing or invalid
   /users/register:
     post:
       tags:
@@ -26,6 +69,9 @@ paths:
       responses:
         200:
           description: Register successfully
+          content: {}
+        400:
+          description: Bad request
           content: {}
   /users/login:
     post:
@@ -48,6 +94,7 @@ paths:
           content: {}
   /users/logout:
     get:
+      security: [{ 'bearerAuth': [] }]
       tags:
         - user
       summary: Logs out current logged in user session
@@ -57,11 +104,7 @@ paths:
           content: {}
   /users/getMe:
     get:
-      security: [
-            {
-                "bearerAuth": []
-            }
-          ]
+      security: [{ 'bearerAuth': [] }]
       tags:
         - user
       summary: Returns logged in user information
@@ -75,35 +118,14 @@ paths:
         403:
           description: Not authorized
           content: {}
-  /admin/add-guest:
-    post:
-      security: [
-           {
-              "bearerAuth": []
-           }
-        ]
-      tags:
-        - admin
-      summary: add new guest on invitations table
-      requestBody: array of strings with guests emails
-        description: Adds a new guest
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/Guest'
-        required: true
-      responses: 
-        200:
-          description: the guests was created successfully
-        400: 
-          description: Bad request
-        401:
-          description: Access token is missing or invalid
+
 components:
   schemas:
     User:
       type: object
       properties:
+        userName:
+          type: string
         firstName:
           type: string
         lastName:
@@ -127,16 +149,39 @@ components:
           len: [8, 16]
     Guest:
       type: object
-      properties: 
+      properties:
         emails:
           type: array
           items:
             type: string
             format: email
-            
+            example: 'user@user.com'
+        eventId:
+          type: number
+          example: 3
+    Event:
+      type: object
+      properties:
+        title:
+          type: string
+          example: 'LA VELADA DEL AÑO 2'
+        url:
+          type: text
+          allowNull: false
+          example: 'https://www.youtube.com/watch?v=ChxPDdw2Tto'
+        description:
+          type: text
+          allowNull: true
+          example: 'La Velada del Año 2 es un gran evento de peleas de boxeo entre streamers organizado por el conocido streamer español Ibai Llanos.'
+        date:
+          type: string
+          format: date-time
+          allowNull: false
+          example: '07 December 2022, 22:30'
+
   securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
-        in: header
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      in: header
