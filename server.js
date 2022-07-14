@@ -16,7 +16,7 @@ corsOptions = {
   origin: [
     'http://localhost:3000',
     'https://virtualeventst3.netlify.app',
-    'https://virtual-events-t3.herokuapp.com',
+    'https://virtual-events-t3.herokuapp.com/api-docs',
   ],
   credentials: true,
 };
