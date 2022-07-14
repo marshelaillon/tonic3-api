@@ -37,6 +37,7 @@ class UserService {
         lastName,
         email,
         password: hashedPassword,
+        isAdmin,
       });
 
       if (newUser) {
