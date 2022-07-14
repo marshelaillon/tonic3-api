@@ -1,30 +1,37 @@
 const { invitationModel, eventModel, userModel } = require('../models');
 const { use } = require('../utils/nodemailConfig');
 const transporter = require('../utils/nodemailConfig');
+const bcrypt = require('bcryptjs');
 
 class adminService {
   static async addGuest(body) {
-    console.log('igualk esto lo venmos en la terminal', body);
-
     try {
       const { emails, eventId } = body;
-      if (!emails) return { error: true, data: 'Please enter all fields' };
+      if (!emails) return { error: true, data: 'Please enter guests emails' };
+
+      const event = await eventModel.findByPk(eventId);
+      if (!event) return { error: true, data: 'Event not found' };
+
+      const randomString = Math.random().toString(36);
+      const accessCode = (await bcrypt.hash(randomString, 2)).slice(0, 20);
 
       emails.forEach(async email => {
-        const [invitation, create] = await invitationModel.findOrCreate({
-          where: { email: email, eventId: eventId },
+        const isGuest = await invitationModel.findOne({
+          where: { email, eventId: event.id },
         });
-        if (create) {
-          const event = await eventModel.findByPk(eventId);
-          if (!event) return { error: true, data: 'Event not found' };
-          await invitation.setEvent(event);
-          await event.increaseGuestCount();
+        if (isGuest) {
+          return;
         } else {
-          return { error: true, data: 'Llego el no deseado' };
+          const guest = await invitationModel.create({
+            email,
+            eventId: event.id,
+            accessCode,
+          });
+          if (!guest) return { error: true, data: 'Something went wrong' };
+          else event.increaseGuestCount();
         }
       });
-
-      return { error: false, data: 'the guests was created successfully' };
+      return { error: false, data: 'Guests added successfully' };
     } catch (error) {
       return { error: true, data: error.message };
     }
@@ -42,20 +49,17 @@ class adminService {
     }
   }
 
-  static async removeGuest(body) {
+  static async removeGuest(id) {
     try {
-      const removedGuest = await invitationModel.destroy({
-        where: { id: body },
-      });
-      if (!removedGuest) return { error: true, data: 'Guest not found' };
-      return { error: false, data: 'Delete complete' };
+      const removed = await invitationModel.destroy({ where: { id } });
+      if (!removed) return { error: true, data: 'Guest not found' };
+      return { error: false, data: 'Guest deleted successfully' };
     } catch (error) {
       return { error: true, data: error };
     }
   }
 
   static async sendInvitations() {
-    console.log('aca estamos ');
     try {
       const { count, rows: guests } = await invitationModel.findAndCountAll({
         where: { send: false },
@@ -93,7 +97,6 @@ class adminService {
         );
         await guest.setSend();
       });
-
       return { error: false, data: `We just sent ${count} invitations` };
     } catch (error) {
       return { error: true, data: error.message };
@@ -102,11 +105,9 @@ class adminService {
 
   static async addEvent(body, file) {
     try {
-      console.log('FILE DEL ADD EVENT', file);
       const { title, url, description, date } = body;
 
       if (!title || !url || !description || !date) {
-        console.log('entre al primer if');
         return { error: true, data: 'All fields are required' };
       }
       const event = await eventModel.create({ ...body, image: file.path });
@@ -149,10 +150,11 @@ class adminService {
         where: { id },
         returning: true,
       });
-      // console.log('edited event', [...editedEvent[1].dataValues]);
-      if (!editedEvent) return { error: true, data: 'Event not found' };
+      if (!editedEvent) return { error: true, data: 'Something went wrong' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) {}
+    } catch (error) {
+      return { error: true, data: error };
+    }
   }
 
   static async getAllUsers(body) {
@@ -176,13 +178,11 @@ class adminService {
 
   static async removeEvent(paramsId) {
     try {
-      const removedEvent = await eventModel.destroy({
-        where: { id: paramsId },
-      });
-      if (!removedEvent) return { error: true, data: 'Guest not found' };
-      return { error: false, data: 'Delete complete' };
+      const removed = await eventModel.destroy({ where: { id: paramsId } });
+      if (!removed) return { error: true, data: 'Event not found' };
+      return { error: false, data: 'Event deleted successfully' };
     } catch (error) {
-      return { error: true, data: 'Delete Incomplete ', error };
+      return { error: true, data: 'It was not possible to delete the event' };
     }
   }
 
@@ -190,17 +190,20 @@ class adminService {
     console.log(paramsId);
     try {
       const user = await userModel.findByPk(paramsId);
-      console.log('LLEGUE ACA ', user.isAdmin);
-
+      if (!user) return { error: true, data: 'User not found' };
       if (user.isAdmin) {
-        console.log('llegue');
-        user.update({ isAdmin: false });
+        const updated = await user.update({ isAdmin: false, returning: true });
+        return {
+          error: false,
+          data: `Updated successfully to admin = ${updated.dataValues.isAdmin}`,
+        };
       } else {
-        user.update({ isAdmin: true });
+        const updated = await user.update({ isAdmin: true });
+        return {
+          error: false,
+          data: `Updated successfully to admin = ${updated.dataValues.isAdmin}`,
+        };
       }
-      console.log('LLEGUE ACA ', user.isAdmin);
-
-      return { error: false, data: 'Update successfully' };
     } catch (error) {
       return { error: true, data: error };
     }

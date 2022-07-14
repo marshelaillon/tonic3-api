@@ -19,17 +19,9 @@ class UserController {
   // @access  Public
   static async loginUser(req, res) {
     const { error, data } = await UserService.loginUser(req.body);
-    console.log('data del back...!!!!', { data });
     if (error) return res.sendStatus(400);
 
     const token = generateToken(data.id);
-    /*     res.cookie('token', token, {
-      secure: true,
-      sameSite: 'none',
-      maxAge: 24 * 60 * 60 * 1000 * 7,
-      sameSite: 'none',
-      secure: true,
-    }); */
     res.status(200).json({ ...data, token });
   }
 
@@ -72,12 +64,12 @@ class UserController {
       id
     );
     if (error) return res.status(400).json({ data });
-    res.status(200).json({ data });
+    res.status(200).json(data);
   }
 
-  // @desc    Register a new user
-  // @route   POST /api/users/register
-  // @access  Public
+  // @desc    Update the user's information
+  // @route   POST /api/users/update
+  // @access  Private
   static async userUpdate(req, res) {
     console.log('ESTO ES EL FILE DE CONTROLLER', req.file);
     const { error, data } = await UserService.userUpdate(
@@ -91,19 +83,11 @@ class UserController {
 
   // @desc    Remove a new user
   // @route   POST /api/users/register
-  // @access  Public & (private¿?)
+  // @access  Private
   static async removeUser(req, res) {
-    const { error, data } = await UserService.removeUser(req.params.id);
+    if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
+    const { error, data } = await UserService.removeUser();
     if (error) return res.status(400).json(data);
-    res.status(200).json(data);
-  }
-
-  // @desc    Get all users
-  // @route   POST /api/users/register
-  // @access  private
-  static async getUsers(req, res) {
-    const { error, data } = await UserService.getUsers(req.user);
-    if (error) return res.status(401).json(data);
     res.status(200).json(data);
   }
 
@@ -130,7 +114,7 @@ class UserController {
   // @access  private
   static async getEvents(req, res) {
     if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
-    const { error, data } = await UserService.getEvents(req.user.email);
+    const { error, data } = await UserService.getEvents();
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }

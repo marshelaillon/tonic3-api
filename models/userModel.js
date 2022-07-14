@@ -39,7 +39,6 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-
     profilePicture: {
       type: S.TEXT,
       defaultValue: 'http://localhost:3001/static/images/defaultUser.png',
@@ -48,7 +47,6 @@ User.init(
       type: S.STRING,
     },
   },
-
   { sequelize: db, modelName: 'users' }
 );
 

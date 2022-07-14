@@ -10,7 +10,177 @@ info:
     email: virutaleventsteam@gmail.com
 servers:
   - url: http://localhost:3001/api
+    description: development server
+  - url: https://virtual-events-t3.herokuapp.com/api
+    description: production server
 paths:
+  /admin/add-event:
+    post:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Adds new event to the events table
+      requestBody:
+        description: Created event object
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        200:
+          description: the event was created successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /admin/add-guest:
+    post:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Adds new guest on invitations table
+      requestBody:
+        description: array of strings with guests emails and event id
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Guest'
+        required: true
+      responses:
+        200:
+          description: the guests was created successfully
+        400:
+          description: Bad request
+        401:
+          description: Access token is missing or invalid
+  /admin/send-invitations:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Sends invitations to guests
+      responses:
+        200:
+          description: The invitations were sent successfully
+        401:
+          description: Unauthorized
+  /admin/get-all-guests:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Returns all guests
+      responses:
+        200:
+          description: Guests
+        401:
+          description: Unauthorized
+  /admin/get-all-users:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Returns all users
+      responses:
+        200:
+          description: Users
+        401:
+          description: Unauthorized
+  /admin/get-all-events:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Returns all events
+      responses:
+        200:
+          description: Events
+        401:
+          description: Unauthorized
+  /admin/remove-guests/{guestId}:
+    delete:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Removes a guest
+      parameters:
+        - in: path
+          name: guestId
+          description: id of the guest
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The guest was removed successfully
+        401:
+          description: Unauthorized
+  /admin/remove-events/{eventId}:
+    delete:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Removes an event
+      parameters:
+        - in: path
+          name: eventId
+          description: id of the event
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The event was removed successfully
+        401:
+          description: Unauthorized
+  /admin/edit-event/{eventId}:
+    put:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Edits an event
+      parameters:
+        - in: path
+          name: eventId
+          description: id of the event
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Edited event object
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        200:
+          description: The event was edited successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /admin/edit-user/{id}:
+    put:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Promotes a user to admin/Downgrades an admin to user
+      parameters:
+        - in: path
+          name: id
+          description: id of the user/admin
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The user was edited successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
   /users/register:
     post:
       tags:
@@ -26,6 +196,9 @@ paths:
       responses:
         200:
           description: Register successfully
+          content: {}
+        400:
+          description: Bad request
           content: {}
   /users/login:
     post:
@@ -46,8 +219,58 @@ paths:
         400:
           description: Bad request
           content: {}
+  /users/forgot-password:
+    post:
+      tags:
+        - user
+      summary: Sends a password reset link to the user's email
+      requestBody:
+        description: Object with user email
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: user's email
+              required: true
+      responses:
+        200:
+          description: Password reset link was sent successfully
+          content: {}
+  /users/{id}/new-password:
+    post:
+      tags:
+        - user
+      summary: Changes user's password
+      parameters:
+        - in: path
+          name: id
+          description: id of the user
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Object with user's new password
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: user's new password
+                  required: true
+      responses:
+        200:
+          description: Password was changed successfully
+        400:
+          description: Bad request
   /users/logout:
     get:
+      security: [{ 'bearerAuth': [] }]
       tags:
         - user
       summary: Logs out current logged in user session
@@ -57,53 +280,50 @@ paths:
           content: {}
   /users/getMe:
     get:
-      security: [
-            {
-                "bearerAuth": []
-            }
-          ]
+      security: [{ 'bearerAuth': [] }]
       tags:
         - user
       summary: Returns logged in user information
       responses:
         200:
           description: Returns logged in user info except for the password
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        403:
+        401:
           description: Not authorized
-          content: {}
-  /admin/add-guest:
-    post:
-      security: [
-           {
-              "bearerAuth": []
-           }
-        ]
+  /users/update:
+    put:
+      security: [{ 'bearerAuth': [] }]
       tags:
-        - admin
-      summary: add new guest on invitations table
-      requestBody: array of strings with guests emails
-        description: Adds a new guest
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/Guest'
+        - user
+      summary: Updates user information
+      requestBody:
+        description: Updated user object
         required: true
-      responses: 
+      responses:
         200:
-          description: the guests was created successfully
-        400: 
+          description: User was updated successfully
+        400:
           description: Bad request
         401:
-          description: Access token is missing or invalid
+          description: Unauthorized
+  /user/remove:
+    delete:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - user
+      summary: Removes user from the system
+      responses:
+        200:
+          description: User was removed successfully
+        401:
+          description: Unauthorized
+
 components:
   schemas:
     User:
       type: object
       properties:
+        userName:
+          type: string
         firstName:
           type: string
         lastName:
@@ -114,9 +334,7 @@ components:
         password:
           type: string
           len: [8, 64]
-        isAdmin:
-          type: boolean
-          default: false
+
     Login:
       type: object
       properties:
@@ -124,21 +342,48 @@ components:
           type: string
         password:
           type: string
-          len: [8, 16]
+          len: [8, 64]
     Guest:
       type: object
-      properties: 
+      properties:
         emails:
           type: array
           items:
             type: string
             format: email
+<<<<<<< HEAD
         eventId: 
           type: int
             
+=======
+            example: 'user@user.com'
+        eventId:
+          type: number
+          example: 3
+    Event:
+      type: object
+      properties:
+        title:
+          type: string
+          example: 'LA VELADA DEL AÑO 2'
+        url:
+          type: text
+          allowNull: false
+          example: 'https://www.youtube.com/watch?v=ChxPDdw2Tto'
+        description:
+          type: text
+          allowNull: true
+          example: 'La Velada del Año 2 es un gran evento de peleas de boxeo entre streamers organizado por el conocido streamer español Ibai Llanos.'
+        date:
+          type: string
+          format: date-time
+          allowNull: false
+          example: '07 December 2022, 22:30'
+
+>>>>>>> e81e2e18e7c678e7f4c14c3b561f93f238bf0829
   securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
-        in: header
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      in: header

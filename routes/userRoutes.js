@@ -4,7 +4,7 @@ const requireAuth = require('../middlewares/requireAuth');
 
 router.get('/logout', requireAuth, UserController.logoutUser);
 router.get('/getMe', requireAuth, UserController.getMe);
-router.get('/admin/user', requireAuth, UserController.getUsers);
+// router.get('/admin/user', requireAuth, UserController.getAllUsers);
 router.post('/register', UserController.registerUser);
 router.post('/login', UserController.loginUser);
 router.post('/forgot-password', UserController.forgotPassword);
