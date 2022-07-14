@@ -40,7 +40,7 @@ class UserService {
         isAdmin,
       });
 
-      if (newUser) {
+      /* if (newUser) {
         newUser.setInvitation(invitation);
         const updatedGuest = await invitationModel.update(
           { checked: true },
@@ -64,7 +64,7 @@ class UserService {
               };
             }
           }
-        );
+        ); */
         return { error: false, data: 'Register successfully' };
       }
     } catch (error) {
