@@ -2,7 +2,6 @@ const router = require('express').Router();
 const adminController = require('../controllers/adminController');
 const requireAuth = require('../middlewares/requireAuth');
 
-// rutas para el admin. PROTEGERLAS  !!!!!
 router.get('/send-invitations', requireAuth, adminController.sendInvitations);
 router.post('/add-guest', requireAuth, adminController.addGuest);
 router.delete('/remove-guests/:id', requireAuth, adminController.removeGuest);

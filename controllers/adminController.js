@@ -10,11 +10,10 @@ class adminController {
   }
 
   static async removeGuest(req, res) {
-    console.log(req.body);
     if (req.user.isAdmin) {
       const { error, data } = await adminService.removeGuest(req.params.id);
       if (error) return res.status(400).json({ data });
-      res.status(200).json({ data });
+      res.status(200).json(data);
     } else res.status(403).json({ data: 'Unauthorized user' });
   }
 
@@ -85,7 +84,7 @@ class adminController {
     if (req.user.isAdmin) {
       const { error, data } = await adminService.removeEvent(req.params.id);
       if (error) return res.status(400).json({ data });
-      res.status(204).json({ data });
+      res.status(200).json(data);
     } else res.status(403).json({ data: 'Unauthorized user' });
   }
 

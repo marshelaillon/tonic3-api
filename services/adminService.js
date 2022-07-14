@@ -40,13 +40,11 @@ class adminService {
     }
   }
 
-  static async removeGuest(body) {
+  static async removeGuest(id) {
     try {
-      const removedGuest = await invitationModel.destroy({
-        where: { id: body },
-      });
-      if (!removedGuest) return { error: true, data: 'Guest not found' };
-      return { error: false, data: 'Delete complete' };
+      const removed = await invitationModel.destroy({ where: { id } });
+      if (!removed) return { error: true, data: 'Guest not found' };
+      return { error: false, data: 'Guest deleted successfully' };
     } catch (error) {
       return { error: true, data: error };
     }
@@ -90,7 +88,6 @@ class adminService {
         );
         await guest.setSend();
       });
-
       return { error: false, data: `We just sent ${count} invitations` };
     } catch (error) {
       return { error: true, data: error.message };
@@ -169,13 +166,11 @@ class adminService {
 
   static async removeEvent(paramsId) {
     try {
-      const removedEvent = await eventModel.destroy({
-        where: { id: paramsId },
-      });
-      if (!removedEvent) return { error: true, data: 'Guest not found' };
-      return { error: false, data: 'Delete complete' };
+      const removed = await eventModel.destroy({ where: { id: paramsId } });
+      if (!removed) return { error: true, data: 'Event not found' };
+      return { error: false, data: 'Event deleted successfully' };
     } catch (error) {
-      return { error: true, data: 'Delete Incomplete ', error };
+      return { error: true, data: 'It was not possible to delete the event' };
     }
   }
 

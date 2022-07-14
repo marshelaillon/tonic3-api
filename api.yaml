@@ -54,7 +54,18 @@ paths:
           description: Bad request
         401:
           description: Access token is missing or invalid
-  /get-all-guests:
+  /admin/send-invitations:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Sends invitations to guests
+      responses:
+        200:
+          description: The invitations were sent successfully
+        401:
+          description: Unauthorized
+  /admin/get-all-guests:
     get:
       security: [{ 'bearerAuth': [] }]
       tags:
@@ -62,7 +73,65 @@ paths:
       summary: Returns all guests
       responses:
         200:
-          description: array of guests
+          description: Guests
+        401:
+          description: Unauthorized
+  /admin/get-all-users:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Returns all users
+      responses:
+        200:
+          description: Users
+        401:
+          description: Unauthorized
+  /admin/get-all-events:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Returns all events
+      responses:
+        200:
+          description: Events
+        401:
+          description: Unauthorized
+  /admin/remove-guests/{guestId}:
+    delete:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Removes a guest
+      parameters:
+        - in: path
+          name: guestId
+          description: id of the guest
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The guest was removed successfully
+        401:
+          description: Unauthorized
+  /admin/remove-events/{eventId}:
+    delete:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Removes an event
+      parameters:
+        - in: path
+          name: eventId
+          description: id of the event
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The event was removed successfully
         401:
           description: Unauthorized
   /users/register:
