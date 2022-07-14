@@ -14,7 +14,9 @@ class adminService {
         const [invitation, create] = await invitationModel.findOrCreate({
           where: { email: email, eventId: eventId },
         });
+        
         if (create) {
+          console.log("esto es el create", create);
           const event = await eventModel.findByPk(eventId);
           if (!event) return { error: true, data: 'Event not found' };
           await invitation.setEvent(event);
