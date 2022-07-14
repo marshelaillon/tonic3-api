@@ -26,9 +26,16 @@ class UserService {
       // verificamos que si o si tenga invitacion.
       const invitation = await invitationModel.findOne({ where: { email } });
       if (!invitation)
-        return { error: true, data: "Couldn't found your invitation" };
+        return { error: true, data: "Couldn't find your invitation" };
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 12);
+      let hashedPassword;
+      if (
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+          password
+        )
+      ) {
+        hashedPassword = await bcrypt.hash(password, 12);
+      }
 
       // Create user
       const newUser = await User.create({
@@ -136,19 +143,21 @@ class UserService {
 
   static async forgotPassword(email) {
     const user = await User.findOne({ where: { email } });
+
+    // Person never knows if a user is registered or not
     let message = 'Check your email for a link to reset your password!';
 
-    if (!user)
-      return {
-        error: true,
-        data: message,
-      };
+    if (!user) return { error: true, data: message };
 
     try {
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
         expiresIn: '10m',
       });
-      const verificationLink = `http://localhost:3000/#/new-password/${user.id}/${token}`;
+      let verificationLink;
+      if (process.env.NODE_ENV === 'production')
+        verificationLink = `https://virtualeventst3.netlify.app/#/new-password/${user.id}/${token}`;
+      if (process.env.NODE_ENV === 'development')
+        verificationLink = `http://localhost:3000/#/new-password/${user.id}/${token}`;
       await transporter.sendMail({
         from: 'virtualevents@gmail.com',
         to: user.email,
@@ -158,10 +167,7 @@ class UserService {
               <h2><a href=${verificationLink}>Go to verification link!</a></h2>
             </div>`,
       });
-      return {
-        error: false,
-        data: 'Email sent successfully!',
-      };
+      return { error: false, data: 'Email sent successfully!' };
     } catch (error) {
       return {
         error: true,
@@ -173,9 +179,23 @@ class UserService {
   static async createNewPassword(newPassword, id) {
     try {
       const user = await User.findByPk(id);
-      const hashedPassword = await bcrypt.hash(newPassword, 12);
-      await user.update({ password: hashedPassword });
-      return { error: false, data: 'Password changed successfully!' };
+      if (!user) return { error: true, data: 'User not found' };
+      // make new password matches the expression regular /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+      if (
+        newPassword &&
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+          newPassword
+        )
+      ) {
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        await user.update({ password: hashedPassword });
+        return { error: false, data: 'Password changed successfully!' };
+      } else {
+        return {
+          error: true,
+          data: 'Password must contain at least 8 characters, one letter, one number and one special character',
+        };
+      }
     } catch (error) {
       return { error: true, data: error };
     }
@@ -310,18 +330,24 @@ console.log(body.tokenCap);
   static async updateToken(body) {
     try {
       const { email } = body;
+      // Halla el primer regitro que coincida con el email
       const guest = await invitationModel.findOne({ where: { email } });
-      const token = await guest.updateToken();
 
-      if (!token) return { error: true, data: 'Cannot generate a new token' };
+      const randomString = Math.random().toString(36);
+      const newAccessCode = (await bcrypt.hash(randomString, 2)).slice(0, 20);
 
+      if (!newAccessCode)
+        return { error: true, data: 'Cannot generate a new token' };
+      else {
+        await guest.update({ accessCode: newAccessCode });
+      }
       await transporter.sendMail(
         {
           from: 'virtualevents@gmail.ar',
           to: email,
           subject: 'NEW TOKEN',
           html: `<div>
-              <h2>This is your new access code: ${token}</h2>
+              <h2>This is your new access code: ${newAccessCode}</h2>
             </div>`,
         },
         (error, info) => {
