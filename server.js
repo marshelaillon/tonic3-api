@@ -13,7 +13,11 @@ const YAML = require('yamljs');
 const swaggerJsDocs = YAML.load('./api.yaml');
 
 corsOptions = {
-  origin: ['http://localhost:3000', 'https://virtualeventst3.netlify.app'],
+  origin: [
+    'http://localhost:3000',
+    'https://virtualeventst3.netlify.app',
+    'https://virtual-events-t3.herokuapp.com/api-docs',
+  ],
   credentials: true,
 };
 
