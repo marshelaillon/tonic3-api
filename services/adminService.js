@@ -110,7 +110,8 @@ class adminService {
       if (!title || !url || !description || !date) {
         return { error: true, data: 'All fields are required' };
       }
-      const event = await eventModel.create({ ...body, image: file.path });
+      console.log("SOY EL FILE", file)
+      const event = await eventModel.create({ ...body, image: file?.path ? file?.path : '' });
       console.log('pase el primer if y soy el event', event);
       if (!event) return { error: true, data: 'Cannot create event' };
       //cambien la data de event{maxi}

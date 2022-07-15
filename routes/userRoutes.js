@@ -11,7 +11,7 @@ router.post('/login', UserController.loginUser);
 router.post('/forgot-password', UserController.forgotPassword);
 router.post('/:id/new-password', UserController.createNewPassword);
 router.post('/update/:id', requireAuth, uploadFile, UserController.userUpdate);
-router.delete('/remove/:id', UserController.removeUser);
+router.delete('/remove/:id', requireAuth, UserController.removeUser);
 //router.post("/register-with-hcaptcha", UserController.hcaptcha)
 
 
