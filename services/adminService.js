@@ -78,7 +78,7 @@ class adminService {
             <hr>
             <h4> Event will take place in ${event?.date} </h4>
             <p>We're waiting for you, click on the following link bellow</p>
-            <a href="http://localhost:3000/home"> asfdsdfhfdgdjghfkhjkghjlg </a>
+            <a href="http://localhost:3000/home"> Virtual Events! </a>
             <p>Don't lose the next token, you will need it to access to the event!</p>
             <p>${guest.accessCode}</p>
             <p>See you soon!</p>
