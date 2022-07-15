@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
 const UserService = require('../services/userService');
 const generateToken = require('../utils/generateToken');
 
@@ -69,7 +71,12 @@ class UserController {
   // @route   POST /api/users/update
   // @access  Private
   static async userUpdate(req, res) {
-    const { error, data } = await UserService.userUpdate(req.body);
+    console.log('ESTO ES EL FILE DE CONTROLLER', req.file);
+    const { error, data } = await UserService.userUpdate(
+      req.body,
+      req.file,
+      req.params.id
+    );
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
@@ -124,6 +131,23 @@ class UserController {
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
+
+  // upload image control
 }
 
-module.exports = UserController;
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    console.log('FILE EN DESTINATION', file);
+    cb(null, 'static/images');
+  },
+  filename: (req, file, cb) => {
+    const randomGenerate = Date.now() + '-' + String(Math.round(Math.random())); // 02/07/2022-5.extension
+    cb(null, randomGenerate + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage: storage,
+}).single('image');
+
+module.exports = { UserController, uploadFile: upload };
