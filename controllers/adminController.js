@@ -90,7 +90,6 @@ class adminController {
   }
 
   static async editUser(req, res) {
-
     if (req.user.isAdmin) {
       const { error, data } = await adminService.editUser(req.params.id);
       if (error) return res.status(400).json({ data });

@@ -317,7 +317,7 @@ console.log(body.tokenCap);
         where: { email: email },
       });
       if (!verifiedGuest) {
-        return { error: true, data: 'No se encontro el invitado' };
+        return { error: true, data: 'Guest not found' };
       }
       if (token !== verifiedGuest.accessCode)
         return { error: false, data: false };
