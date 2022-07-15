@@ -1,8 +1,14 @@
 const router = require('express').Router();
 const adminController = require('../controllers/adminController');
 const requireAuth = require('../middlewares/requireAuth');
+const { uploadFile } = require('../middlewares/multer');
 
-router.post('/add-event', requireAuth, adminController.addEvent);
+router.post(
+  '/add-event',
+  requireAuth,
+  uploadFile.single('image'),
+  adminController.addEvent
+);
 router.post('/add-guest', requireAuth, adminController.addGuest);
 router.get('/send-invitations', requireAuth, adminController.sendInvitations);
 router.get('/get-all-guests', requireAuth, adminController.getAllGuests);

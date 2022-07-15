@@ -1,25 +1,24 @@
 const router = require('express').Router();
-const userController = require('../controllers/userController');
+const { UserController, uploadFile } = require('../controllers/userController');
 const requireAuth = require('../middlewares/requireAuth');
 
-// LOGIN/LOGOUT/REGISTER
-router.get('/logout', requireAuth, userController.logoutUser);
-router.get('/getMe', requireAuth, userController.getMe);
-router.post('/register', userController.registerUser);
-router.post('/login', userController.loginUser);
-router.post('/forgot-password', userController.forgotPassword);
-router.post('/:id/new-password', userController.createNewPassword);
-router.put('/update', requireAuth, userController.userUpdate);
-router.delete('/remove', requireAuth, userController.removeUser);
-//router.post("/register-with-hcaptcha", userController.hcaptcha)
+router.get('/logout', requireAuth, UserController.logoutUser);
+router.get('/getMe', requireAuth, UserController.getMe);
+// router.get('/admin/user', requireAuth, UserController.getAllUsers);
+router.post('/register', UserController.registerUser);
+router.post('/login', UserController.loginUser);
+router.post('/forgot-password', UserController.forgotPassword);
+router.post('/:id/new-password', UserController.createNewPassword);
+router.post('/update/:id', uploadFile, UserController.userUpdate);
+router.delete('/remove/:id', UserController.removeUser);
+//router.post("/register-with-hcaptcha", UserController.hcaptcha)
 
-// ACCESS TOKEN & EMAIL VERIFICATION
-router.post('/verify-email', userController.verifyEmail);
-router.post('/verify-guest-token', userController.verifyToken);
-router.put('/update-token', userController.updateToken);
+router.post('/verify-email', UserController.verifyEmail);
+router.post('/verify-guest-token', UserController.verifyToken);
+router.put('/update-token', UserController.updateToken);
 
 // EVENTS
-router.get('/events', requireAuth, userController.getEvents);
-router.get('/events/:id', requireAuth, userController.getEventById);
+router.get('/events', requireAuth, UserController.getEvents);
+router.get('/events/:id', requireAuth, UserController.getEventById);
 
 module.exports = router;

@@ -103,13 +103,18 @@ class adminService {
     }
   }
 
-  static async addEvent(body) {
+  static async addEvent(body, file) {
     try {
       const { title, url, description, date } = body;
-      if (!title || !url || !description || !date)
+
+      if (!title || !url || !description || !date) {
         return { error: true, data: 'All fields are required' };
-      const event = await eventModel.create(body);
-      if (!event) return { error: true, data: 'Something went wrong' };
+      }
+      const event = await eventModel.create({ ...body, image: file.path });
+      console.log('pase el primer if y soy el event', event);
+      if (!event) return { error: true, data: 'Cannot create event' };
+      //cambien la data de event{maxi}
+      // ! MOSTRAR A LES MUCHACHES xd
       console.log('Fecha del evento en mi zona horaria', event.getLocalDate());
       console.log('Tiempo restante:', event.getLeftTimeForEvent());
       return { error: false, data: event };
@@ -183,6 +188,7 @@ class adminService {
   }
 
   static async editUser(paramsId) {
+    console.log(paramsId);
     try {
       const user = await userModel.findByPk(paramsId);
       if (!user) return { error: true, data: 'User not found' };

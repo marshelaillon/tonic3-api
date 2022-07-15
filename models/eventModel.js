@@ -63,6 +63,15 @@ Event.init(
       type: S.TEXT,
       allowNull: false,
     },
+    shortDescription: {
+      type: S.VIRTUAL,
+      get() {
+        return this.getDataValue('description').substring(0, 190);
+      },
+    },
+    image: {
+      type: S.TEXT,
+    },
     assistantsCount: {
       type: S.INTEGER,
       defaultValue: 0,
