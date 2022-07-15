@@ -363,22 +363,29 @@ console.log(body.tokenCap);
     }
   }
 
-  static async getEvents() {
+  static async getEvents(user) {
     try {
       const invitations = await invitationModel.findAll({
-        where: { email: req.user.email },
+        where: { email: user.email },
         attributes: [],
         include: [
           {
             model: eventModel,
             as: 'event',
-            attributes: ['title', 'description', 'date', 'id', 'image'],
+            attributes: [
+              'title',
+              'description',
+              'date',
+              'id',
+              'image',
+              'shortDescription',
+            ],
           },
         ],
       });
       if (!invitations.length) return { error: true, data: 'guests not found' };
       const sortedEvents = invitations
-        .map(item => item.dataValues.event.dataValues)
+        .map(item => item?.dataValues?.event?.dataValues)
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
       const event = await eventModel.findByPk(sortedEvents[0].id);

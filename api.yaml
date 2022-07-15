@@ -351,11 +351,6 @@ components:
           items:
             type: string
             format: email
-<<<<<<< HEAD
-        eventId: 
-          type: int
-            
-=======
             example: 'user@user.com'
         eventId:
           type: number
@@ -380,7 +375,6 @@ components:
           allowNull: false
           example: '07 December 2022, 22:30'
 
->>>>>>> e81e2e18e7c678e7f4c14c3b561f93f238bf0829
   securitySchemes:
     bearerAuth:
       type: http

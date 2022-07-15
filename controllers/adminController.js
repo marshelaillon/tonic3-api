@@ -34,12 +34,12 @@ class adminController {
   }
 
   static async addEvent(req, res) {
-    // if (req.user.isAdmin) {
-    const { error, data } = await adminService.addEvent(req.body, req.file);
-    console.log('data controller pre error', data);
-    if (error) return res.status(400).json({ data });
-    res.status(200).json({ data });
-    // } else res.status(403).json({ data: 'Unauthorized user' });
+    if (req.user.isAdmin) {
+      const { error, data } = await adminService.addEvent(req.body, req.file);
+      console.log('data controller pre error', data);
+      if (error) return res.status(400).json({ data });
+      res.status(200).json({ data });
+    } else res.status(403).json({ data: 'Unauthorized user' });
   }
 
   static async getAllEvents(req, res) {
