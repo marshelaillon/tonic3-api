@@ -152,7 +152,14 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Event'
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
         required: true
       responses:
         200:
@@ -345,7 +352,6 @@ components:
         password:
           type: string
           len: [8, 64]
-
     Login:
       type: object
       properties:
@@ -371,15 +377,14 @@ components:
       properties:
         title:
           type: string
-          example: 'LA VELADA DEL AÑO 2'
+          example: 'Event title'
         url:
           type: text
-          allowNull: false
           example: 'https://www.youtube.com/watch?v=ChxPDdw2Tto'
         description:
           type: text
           allowNull: true
-          example: 'La Velada del Año 2 es un gran evento de peleas de boxeo entre streamers organizado por el conocido streamer español Ibai Llanos.'
+          example: 'Description of the event'
         date:
           type: string
           format: date-time
