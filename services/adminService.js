@@ -110,6 +110,7 @@ class adminService {
       if (!title || !url || !description || !date) {
         return { error: true, data: 'All fields are required' };
       }
+
       const event = await eventModel.create({
         ...body,
         image: file?.path ? file?.path : '',
