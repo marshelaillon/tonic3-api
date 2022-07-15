@@ -110,11 +110,11 @@ class adminService {
       if (!title || !url || !description || !date) {
         return { error: true, data: 'All fields are required' };
       }
-      const event = await eventModel.create({ ...body, image: file.path });
-      console.log('pase el primer if y soy el event', event);
+      const event = await eventModel.create({
+        ...body,
+        image: file?.path ? file?.path : '',
+      });
       if (!event) return { error: true, data: 'Cannot create event' };
-      //cambien la data de event{maxi}
-      // ! MOSTRAR A LES MUCHACHES xd
       console.log('Fecha del evento en mi zona horaria', event.getLocalDate());
       console.log('Tiempo restante:', event.getLeftTimeForEvent());
       return { error: false, data: event };
@@ -152,7 +152,6 @@ class adminService {
       });
       if (!editedEvent) return { error: true, data: 'Something went wrong' };
       return { error: false, data: editedEvent[1][0] };
-
     } catch (error) {
       return { error: true, data: error };
     }
@@ -187,10 +186,9 @@ class adminService {
     }
   }
 
-  static async editUser(paramsId) {
-    console.log(paramsId);
+  static async editUser(userId) {
     try {
-      const user = await userModel.findByPk(paramsId);
+      const user = await userModel.findByPk(userId);
       if (!user) return { error: true, data: 'User not found' };
       if (user.isAdmin) {
         const updated = await user.update({ isAdmin: false, returning: true });
@@ -199,7 +197,7 @@ class adminService {
           data: `Updated successfully to admin = ${updated.dataValues.isAdmin}`,
         };
       } else {
-        const updated = await user.update({ isAdmin: true });
+        const updated = await user.update({ isAdmin: true, returning: true });
         return {
           error: false,
           data: `Updated successfully to admin = ${updated.dataValues.isAdmin}`,
