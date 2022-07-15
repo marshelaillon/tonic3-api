@@ -305,7 +305,7 @@ paths:
           description: Bad request
         401:
           description: Unauthorized
-  /user/remove:
+  /users/remove:
     delete:
       security: [{ 'bearerAuth': [] }]
       tags:
@@ -314,6 +314,17 @@ paths:
       responses:
         200:
           description: User was removed successfully
+        401:
+          description: Unauthorized
+  /users/events:
+    get:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - user
+      summary: Returns all events that the user is guest of
+      responses:
+        200:
+          description: Events that the user is guest of
         401:
           description: Unauthorized
 
