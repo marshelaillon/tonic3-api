@@ -232,10 +232,10 @@ class UserService {
     }
   }
 
-  static async removeUser() {
+  static async removeUser(id) {
     try {
       //buscamos el usuario a eliminar
-      const user = await User.findByPk(req.user.id);
+      const user = await User.findByPk(id);
       if (!user) {
         //verificamos si el usuario a eliminar existe en caso de q no devolvemos un error
         return { error: true, data: 'User not found' };
@@ -372,6 +372,7 @@ console.log(body.tokenCap);
           {
             model: eventModel,
             as: 'event',
+
             attributes: [
               'title',
               'description',
@@ -379,6 +380,7 @@ console.log(body.tokenCap);
               'id',
               'image',
               'shortDescription',
+              'url'
             ],
           },
         ],
