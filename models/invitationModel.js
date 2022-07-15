@@ -31,20 +31,22 @@ Invitation.init(
   { sequelize: db, modelName: 'invitations' }
 );
 
-Invitation.beforeCreate(async invitations => {
+/* Invitation.beforeCreate(async invitations => {
   await invitations.updateToken();
-});
+}); */
 
 Invitation.prototype.setSend = function () {
   this.setDataValue('send', !this.getDataValue('send'));
   this.save();
 };
+
 Invitation.prototype.updateToken = async function () {
   try {
     const randomString = Math.random().toString(36);
+    console.log("este es el randomString");
     const accessCode = (await bcrypt.hash(randomString, 2)).slice(0, 20);
     this.accessCode = accessCode;
-    console.log('este es el nuevo acces  code', this.accessCode);
+    console.log('este es el nuevo access code', this.accessCode);
     this.save();
     return accessCode;
   } catch (error) {

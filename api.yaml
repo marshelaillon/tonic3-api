@@ -134,6 +134,53 @@ paths:
           description: The event was removed successfully
         401:
           description: Unauthorized
+  /admin/edit-event/{eventId}:
+    put:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Edits an event
+      parameters:
+        - in: path
+          name: eventId
+          description: id of the event
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Edited event object
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        200:
+          description: The event was edited successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /admin/edit-user/{id}:
+    put:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - admin
+      summary: Promotes a user to admin/Downgrades an admin to user
+      parameters:
+        - in: path
+          name: id
+          description: id of the user/admin
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The user was edited successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
   /users/register:
     post:
       tags:
@@ -172,6 +219,55 @@ paths:
         400:
           description: Bad request
           content: {}
+  /users/forgot-password:
+    post:
+      tags:
+        - user
+      summary: Sends a password reset link to the user's email
+      requestBody:
+        description: Object with user email
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: user's email
+              required: true
+      responses:
+        200:
+          description: Password reset link was sent successfully
+          content: {}
+  /users/{id}/new-password:
+    post:
+      tags:
+        - user
+      summary: Changes user's password
+      parameters:
+        - in: path
+          name: id
+          description: id of the user
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Object with user's new password
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: user's new password
+                  required: true
+      responses:
+        200:
+          description: Password was changed successfully
+        400:
+          description: Bad request
   /users/logout:
     get:
       security: [{ 'bearerAuth': [] }]
@@ -193,6 +289,33 @@ paths:
           description: Returns logged in user info except for the password
         401:
           description: Not authorized
+  /users/update:
+    put:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - user
+      summary: Updates user information
+      requestBody:
+        description: Updated user object
+        required: true
+      responses:
+        200:
+          description: User was updated successfully
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+  /user/remove:
+    delete:
+      security: [{ 'bearerAuth': [] }]
+      tags:
+        - user
+      summary: Removes user from the system
+      responses:
+        200:
+          description: User was removed successfully
+        401:
+          description: Unauthorized
 
 components:
   schemas:
@@ -219,7 +342,7 @@ components:
           type: string
         password:
           type: string
-          len: [8, 16]
+          len: [8, 64]
     Guest:
       type: object
       properties:
