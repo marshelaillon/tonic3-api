@@ -142,7 +142,7 @@ class adminService {
       // console.log('edited event', [...editedEvent[1].dataValues]);
       if (!editedEvent) return { error: true, data: 'Event not found' };
       return { error: false, data: editedEvent[1][0] };
-    } catch (error) {}
+    } catch (error) { }
   }
 
   static async getAllUsers(body) {
@@ -175,7 +175,6 @@ class adminService {
   }
 
   static async editUser(paramsId) {
-    console.log(paramsId);
     try {
       const user = await userModel.findByPk(paramsId);
       console.log('LLEGUE ACA ', user.isAdmin);
