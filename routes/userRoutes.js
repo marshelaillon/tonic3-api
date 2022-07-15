@@ -10,7 +10,7 @@ router.post('/login', userController.loginUser);
 router.post('/forgot-password', userController.forgotPassword);
 router.post('/:id/new-password', userController.createNewPassword);
 router.put('/update', requireAuth, userController.userUpdate);
-router.delete('/remove', requireAuth, userController.removeUser);
+router.delete('/remove/:id', requireAuth, userController.removeUser);
 //router.post("/register-with-hcaptcha", userController.hcaptcha)
 
 // ACCESS TOKEN & EMAIL VERIFICATION

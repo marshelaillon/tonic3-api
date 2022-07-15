@@ -79,7 +79,7 @@ class UserController {
   // @access  Private
   static async removeUser(req, res) {
     if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
-    const { error, data } = await UserService.removeUser();
+    const { error, data } = await UserService.removeUser(req.params.id);
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
@@ -107,7 +107,7 @@ class UserController {
   // @access  private
   static async getEvents(req, res) {
     if (!req.user) return res.status(401).json({ error: 'Unauthorized' });
-    const { error, data } = await UserService.getEvents();
+    const { error, data } = await UserService.getEvents(req.user);
     if (error) return res.status(400).json(data);
     res.status(200).json(data);
   }
