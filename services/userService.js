@@ -200,7 +200,7 @@ class UserService {
     }
   }
   //hacer un apartado de contraseña solo ya q si la cambian desde aca no se hashea y tener mejores validaciones {M&M}
-  static async userUpdate(body, file, params) {
+  static async userUpdate(body, file, id) {
     const {
       isAdmin,
       userName,
@@ -211,7 +211,7 @@ class UserService {
     } = body;
     try {
       // verifico si el usuario existe
-      const user = await User.findByPk(req.user.id);
+      const user = await User.findByPk(id);
       //si es usuario no existe
       if (!user) return { error: true, data: 'User does not exist' };
       // si el usuario existe le hasheamos el password si lo tiene
