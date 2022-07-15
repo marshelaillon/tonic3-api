@@ -147,6 +147,7 @@ class adminService {
       });
       if (!editedEvent) return { error: true, data: 'Something went wrong' };
       return { error: false, data: editedEvent[1][0] };
+
     } catch (error) {
       return { error: true, data: error };
     }
