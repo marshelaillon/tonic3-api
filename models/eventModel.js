@@ -54,10 +54,12 @@ Event.init(
     title: {
       type: S.STRING,
       allowNull: false,
+      required: true,
     },
     url: {
       type: S.TEXT,
       allowNull: false,
+      required: true,
     },
     description: {
       type: S.TEXT,
@@ -71,6 +73,8 @@ Event.init(
     },
     image: {
       type: S.TEXT,
+      allowNull: true,
+      required: false,
     },
     assistantsCount: {
       type: S.INTEGER,
@@ -87,6 +91,7 @@ Event.init(
     date: {
       type: S.STRING,
       allowNull: false,
+      required: true,
     },
   },
   { sequelize: db, modelName: 'events' }

@@ -380,7 +380,7 @@ console.log(body.tokenCap);
               'id',
               'image',
               'shortDescription',
-              'url'
+              'url',
             ],
           },
         ],
@@ -388,6 +388,7 @@ console.log(body.tokenCap);
       if (!invitations.length) return { error: true, data: 'guests not found' };
       const sortedEvents = invitations
         .map(item => item?.dataValues?.event?.dataValues)
+        //.map(item => item.event) // no se quejó
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
       const event = await eventModel.findByPk(sortedEvents[0].id);
